@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -129,6 +130,120 @@ public class Igra {
 	}
 	
 	// funkcija, ki preracuna stevilo moznih besed
+	// ne ustrasi se :) triple je samo vnos (a, b, c) v javo, ker je to tu elegantno
+	// no vsaj jst tako menim :)
+	public static int stevilo_moznih(int st_plosca, Igra igra) {
+		LinkedList<String> preostale = Igra.LST;
+		String geslo;
+		String[][] plosca;
+		Polje[][] barve;
+		
+		if (st_plosca == 1) {
+			geslo = igra.beseda1;
+			plosca = igra.plosca1_vrednosti;
+			barve = igra.plosca1_barve;
+		}
+		else if (st_plosca == 2) {
+			geslo = igra.beseda2;
+			plosca = igra.plosca2_vrednosti;
+			barve = igra.plosca2_barve;
+		}
+		else {
+			System.out.print("TA PLOSCA NE OBSTAJA");
+			return 0; 
+			//samo nekaj da lahko spodaj vedno gledamo variable plosco... 
+			//do tega tako ali tako ne bo prihajalo.. hopefully :)
+		}
+		
+		for (int i = 0; i < plosca.length; i++) {
+			String poskus = "";
+			String[] poskus_crke = plosca[i];
+			
+			Map<String, Triple<LinkedList<Integer>, LinkedList<Integer>, LinkedList<Integer>>> zahteve_crke = new HashMap<String, Triple<LinkedList<Integer>, LinkedList<Integer>, LinkedList<Integer>>>();
+			
+			for (int j = 0; j < poskus_crke.length; j++) {
+				poskus += plosca[i][j];
+				}
+		
+			Map<String, Integer> ponovitve = new HashMap<String, Integer>();
+ 			for (int k = 0; k < poskus_crke.length; k++) {
+				ponovitve.put(poskus_crke[k], stevilo_ponovitev(poskus_crke, poskus_crke[k]));
+				}
+			
+			for (String crka : ponovitve.keySet()) {
+				if (ponovitve.get(crka) == 1) {
+					int index = poskus.indexOf(crka);
+					
+					if (barve[i][index] == Polje.PRAVILNO) {
+						LinkedList<Integer> potrebna = new LinkedList<Integer>(Arrays.asList(index));
+						LinkedList<Integer> mozna = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
+						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						zahteve_crke.put(crka, triple_crke);
+					}
+					
+					else if (barve[i][index] == Polje.DELNOPRAVILNO) {
+						LinkedList<Integer> potrebna = new LinkedList<Integer>();
+						LinkedList<Integer> mozna = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
+						mozna.remove(index);
+						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						zahteve_crke.put(crka, triple_crke);
+					}
+					
+					else {
+						LinkedList<Integer> potrebna = new LinkedList<Integer>();
+						LinkedList<Integer> mozna = new LinkedList<Integer>();
+						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						zahteve_crke.put(crka, triple_crke);
+					}
+				}
+				
+				else {
+					LinkedList<Integer> indexi = ponovitve(poskus_crke, crka);
+					LinkedList<Integer> ostali_mozni = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
+					LinkedList<Integer> potrebni = new LinkedList<Integer>();
+					
+					int niso_sivi = indexi.size();
+					for (int n = 0; n < indexi.size(); n++) {
+						if (barve[i][indexi.get(n)] == Polje.NAPACNO) {
+							ostali_mozni.remove(indexi.get(n));
+							niso_sivi--;
+						}
+				
+						else if (barve[i][indexi.get(n)] == Polje.DELNOPRAVILNO) {
+							ostali_mozni.remove(indexi.get(n));
+						}
+						
+						else {
+							potrebni.add(indexi.get(n));
+						}
+					}
+					
+					LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(niso_sivi));
+					Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebni, ostali_mozni, stevilo);
+					zahteve_crke.put(crka, triple_crke);
+				}
+			}
+			// tu je za vsak element zahteve_crke treba iz LinkedList odtraniti tiste, ki ne zadoscajo
+		}
+		return preostale.size();
+	}
+	
+	public static LinkedList<Integer> ponovitve(String[] str_lst, String str) {
+		LinkedList<Integer> indexi = new LinkedList<Integer>();
+		for (int l = 0; l < str_lst.length; l++) {
+			if (str_lst[l] == str) {
+				indexi.add(l);
+			}
+		}
+		return indexi;
+	}
+	
+	public static int stevilo_ponovitev(String[] str_lst, String str) {
+		return ponovitve(str_lst, str).size();
+	}
 	
 	// "importava" seznam besed 
 	
@@ -137,7 +252,5 @@ public class Igra {
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
 	
 	// cas
-	
-	
 	
 }
