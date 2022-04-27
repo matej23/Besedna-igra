@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,10 +9,20 @@ import java.util.Random;
 
 
 public class Igra {
+	
+	
 	public static final int V = 6;
 	public static final int S = 5;
 	
-	public static final LinkedList<String> LST = new LinkedList<String>();
+	public static LinkedList<String> LST; 
+	static {
+		try {
+			LST = seznam_besed("src/besede.txt");
+		}
+		catch (IOException ex){
+			System.out.println("Datoteke besede.txt ne najde");
+		}
+	}
 	
 	public String[][] plosca1_vrednosti;
 	public String[][] plosca2_vrednosti;
@@ -49,36 +62,46 @@ public class Igra {
 		}
 	}
 	
-	//kaj ce imamo poskus omara - 2 * a ???
-	//zdej sem dal na podlagi pozicije - imas lahko razlicno obarvana a-ja
-	//se vedno problem... :(
+	public static LinkedList<String> seznam_besed (String imeVhod) throws IOException {
+		BufferedReader vhod = new BufferedReader (new FileReader(imeVhod));
+		LinkedList<String> sez = new LinkedList<String>();
+		while (vhod.ready()) {
+			String vrstica = vhod.readLine().trim();
+			sez.add(vrstica);
+		}
+		vhod.close();
+		return sez;
+		
+	}
+	
+	// upam, da zdej to ok dela
 	public static Map<Integer, Polje> barva_za_vrednost(String geslo, String poskus) {
 		Map<Integer, Polje> slovar = new HashMap<Integer, Polje>();
 		
 		String[] lst_poskus = poskus.split("");
 		String[] lst_geslo = geslo.split("");
+		
 		for (int i = 0; i < poskus.length(); ++i) {
-			boolean notri = false;
-			for (int j = 0; j < lst_geslo.length; ++j) {
-				if (lst_poskus[i]== lst_geslo[j]) {
-					notri = true;
-				}
-			}
-			if (lst_poskus[i] == lst_geslo[i]) {
+			if (lst_poskus[i].equals(lst_geslo[i])) {
 				slovar.put(i, Polje.PRAVILNO);
+				lst_geslo[i] = "0";
 			}
-			else if (notri) {
+		}
+		for (int i = 0; i < poskus.length(); ++i) {
+			int j = Arrays.asList(lst_geslo).indexOf(lst_poskus[i]);
+			if (slovar.get(i) != Polje.PRAVILNO) {
+				if (j != -1) {
 				slovar.put(i, Polje.DELNOPRAVILNO);
-			}
-			else {
-				slovar.put(i, Polje.NAPACNO);
+				lst_geslo[j] = "0";
+				}
+				else slovar.put(i, Polje.NAPACNO);
 			}
 		}
 		return slovar;
 	}
 	
-	// funkcija, ki updejta vse stiri ploskve glede na novo besedo 
-	// (preveri, ali sta obe ploskvi v teku), updejtamo stanje
+	// funkcija, ki updejta vse stiri plosce glede na novo besedo 
+	// (preveri, ali sta obe plosci v teku), updejtamo stanje
 	public static void odigraj(String poskus, Igra igra) {
 		String[] lst_poskus = poskus.split("");
 		if (igra.stanje == Stanje.V_TEKU_OBE){
@@ -244,10 +267,13 @@ public class Igra {
 	public static int stevilo_ponovitev(String[] str_lst, String str) {
 		return ponovitve(str_lst, str).size();
 	}
-	
-	// "importava" seznam besed 
-	
-	// preveri, da je beseda v sez 
+
+	public static boolean ali_je_ustrezna_beseda(String poskus) {
+		for (String beseda : LST) {
+			if (poskus.equals(beseda)) return true;
+		}
+		return false;
+	}
 
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
 	
