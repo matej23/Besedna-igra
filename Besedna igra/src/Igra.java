@@ -157,17 +157,16 @@ public class Igra {
 	// no vsaj jst tako menim :)
 	public static int stevilo_moznih(int st_plosca, Igra igra) {
 		LinkedList<String> preostale = Igra.LST;
-		String geslo;
 		String[][] plosca;
 		Polje[][] barve;
 		
 		if (st_plosca == 1) {
-			geslo = igra.beseda1;
+			//String geslo = igra.beseda1;
 			plosca = igra.plosca1_vrednosti;
 			barve = igra.plosca1_barve;
 		}
 		else if (st_plosca == 2) {
-			geslo = igra.beseda2;
+			//String geslo = igra.beseda2;
 			plosca = igra.plosca2_vrednosti;
 			barve = igra.plosca2_barve;
 		}
@@ -249,11 +248,44 @@ public class Igra {
 					zahteve_crke.put(crka, triple_crke);
 				}
 			}
-			// tu je za vsak element zahteve_crke treba iz LinkedList odtraniti tiste, ki ne zadoscajo
+			// za vsak element iz zahteve_crke treba iz preostale odtraniti tiste, ki ne zadoscajo
+			for (String beseda : preostale) {
+				boolean ustreza = true;
+				
+				for (String crka : zahteve_crke.keySet()) {
+					//1 zahteva: fiksna pozicija crke
+					for (int index : zahteve_crke.get(crka).getFirst()) {
+						String crka_of_char = "";
+						crka_of_char += beseda.charAt(index);
+						if (crka_of_char != crka) {
+							ustreza = false;
+						}
+					}
+					//2 zahteva: stevilo ponovitev te crke je lahko ze omejeno
+					int p = stevilo_ponovitev(beseda.split(""), crka);
+					if (!zahteve_crke.get(crka).getThird().contains(p)) {
+						ustreza = false;
+					}
+					//3 zahteva: crka je lahko le na nekaterih mestih
+					LinkedList<Integer> ind = ponovitve(beseda.split(""), crka);
+					for (int poz : ind) {
+						if (!zahteve_crke.get(crka).getSecond().contains(poz)) {
+							ustreza = false;
+						}
+					}
+				}
+				
+				if (!ustreza) {
+					preostale.remove(beseda);
+				}
+			}
+			
 		}
+		
 		return preostale.size();
 	}
 	
+	//pomozne funkcije za stevilo_moznih...
 	public static LinkedList<Integer> ponovitve(String[] str_lst, String str) {
 		LinkedList<Integer> indexi = new LinkedList<Integer>();
 		for (int l = 0; l < str_lst.length; l++) {
@@ -266,13 +298,6 @@ public class Igra {
 	
 	public static int stevilo_ponovitev(String[] str_lst, String str) {
 		return ponovitve(str_lst, str).size();
-	}
-
-	public static boolean ali_je_ustrezna_beseda(String poskus) {
-		for (String beseda : LST) {
-			if (poskus.equals(beseda)) return true;
-		}
-		return false;
 	}
 
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
