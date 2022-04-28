@@ -1,3 +1,4 @@
+package logika;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,11 +34,13 @@ public class Igra {
 	protected String beseda1;
 	protected String beseda2;
 	protected Jezik jezik;
+	protected ColorTheme color;
+	protected Cas cas;
 	
 	public Igra(Jezik jezik) {
 		this.jezik = jezik;
 		
-		stanje = Stanje.V_TEKU_OBE;
+		stanje = new Stanje(LST.size());
 		Random rand = new Random();
 		int i = rand.nextInt(LST.size());
 		beseda1 = LST.get(i);
@@ -102,73 +105,74 @@ public class Igra {
 	
 	// funkcija, ki updejta vse stiri plosce glede na novo besedo 
 	// (preveri, ali sta obe plosci v teku), updejtamo stanje
-	public static void odigraj(String poskus, Igra igra) {
+	
+	public void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
-		if (igra.stanje == Stanje.V_TEKU_OBE){
+		if (stanje.plosca1 == StanjeEnum.V_TEKU && stanje.plosca2 == StanjeEnum.V_TEKU){
 			int vrstica = 0;
-			while (igra.plosca1_barve[vrstica][0] != Polje.PRAZNO) {
+			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(igra.beseda1, poskus);
-			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(igra.beseda2, poskus);
+			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
+			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
 			
-			for (int i = 0; i < igra.plosca1_barve.length; i++ ) {
-				igra.plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
-				igra.plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
-				igra.plosca1_vrednosti[vrstica][i] = lst_poskus[i];
-				igra.plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
+			for (int i = 0; i < plosca1_barve.length; i++ ) {
+				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
+				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
+				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
+				plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
 			}
 		}
 		
-		else if (igra.stanje == Stanje.V_TEKU_1) {
+		else if (stanje.plosca1 == StanjeEnum.V_TEKU) {
 			int vrstica = 0;
-			while (igra.plosca1_barve[vrstica][0] != Polje.PRAZNO) {
+			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(igra.beseda1, poskus);
+			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
 			
-			for (int i = 0; i < igra.plosca1_barve.length; i++ ) {
-				igra.plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
-				igra.plosca1_vrednosti[vrstica][i] = lst_poskus[i];
+			for (int i = 0; i < plosca1_barve.length; i++ ) {
+				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
+				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
 			}
 		}
 		
-		else if (igra.stanje == Stanje.V_TEKU_2) {
+		else if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int vrstica = 0;
-			while (igra.plosca2_barve[vrstica][0] != Polje.PRAZNO) {
+			while (plosca2_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(igra.beseda2, poskus);
+			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
 			
-			for (int i = 0; i < igra.plosca2_barve.length; i++ ) {
-				igra.plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
-				igra.plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
+			for (int i = 0; i < plosca2_barve.length; i++ ) {
+				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
+				plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
 			}
 		}
 		else {
 			System.out.print("STANJE ZA VNOS POTEZE NI USTREZNO ! :(");
 		}
-		//spremeniva tu stanje/ga preveriva/zamenjava - 
-		//ali se samo skliceva na class Stanje ? - pa lahko tu dodava se moznosti...
+		// spremeniva tu stanje/ga preveriva/zamenjava - 
+		// spremeniva stevilo moznosti po vsaki odigrani potezi 
 	}
 	
 	// funkcija, ki preracuna stevilo moznih besed
 	// ne ustrasi se :) triple je samo vnos (a, b, c) v javo, ker je to tu elegantno
 	// no vsaj jst tako menim :)
-	public static int stevilo_moznih(int st_plosca, Igra igra) {
+	public int stevilo_moznih(int st_plosca) {
 		LinkedList<String> preostale = Igra.LST;
 		String[][] plosca;
 		Polje[][] barve;
 		
 		if (st_plosca == 1) {
 			//String geslo = igra.beseda1;
-			plosca = igra.plosca1_vrednosti;
-			barve = igra.plosca1_barve;
+			plosca = plosca1_vrednosti;
+			barve = plosca1_barve;
 		}
 		else if (st_plosca == 2) {
 			//String geslo = igra.beseda2;
-			plosca = igra.plosca2_vrednosti;
-			barve = igra.plosca2_barve;
+			plosca = plosca2_vrednosti;
+			barve = plosca2_barve;
 		}
 		else {
 			System.out.print("TA PLOSCA NE OBSTAJA");
@@ -300,6 +304,8 @@ public class Igra {
 		return ponovitve(str_lst, str).size();
 	}
 
+	//posodobi stanje in stevilo besed
+	
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
 	
 	// cas

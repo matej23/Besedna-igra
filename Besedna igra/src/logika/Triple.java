@@ -1,3 +1,4 @@
+package logika;
 public class Triple<A, B, C> {
     private final A mFirst;
     private final B mSecond;
