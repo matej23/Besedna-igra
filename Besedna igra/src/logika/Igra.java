@@ -18,7 +18,7 @@ public class Igra {
 	public LinkedList<String> LST; 
 	{
 		try {
-			LST = seznam_besed("src/besede.txt");
+			LST = seznam_besed("besede.txt");
 		}
 		catch (IOException ex){
 			System.out.println("Datoteke besede.txt ne najde");
@@ -109,6 +109,9 @@ public class Igra {
 	
 	public void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
+//		for (String znak : lst_poskus) {
+//			System.out.print(znak);
+//		}
 		if (stanje.plosca1 == StanjeEnum.V_TEKU && stanje.plosca2 == StanjeEnum.V_TEKU){
 			int vrstica = 0;
 			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
@@ -117,7 +120,7 @@ public class Igra {
 			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
 			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
 			
-			for (int i = 0; i < plosca1_barve.length; i++ ) {
+			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
 				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
 				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
@@ -132,7 +135,7 @@ public class Igra {
 			}
 			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
 			
-			for (int i = 0; i < plosca1_barve.length; i++ ) {
+			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
 				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
 			}
@@ -145,7 +148,7 @@ public class Igra {
 			}
 			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
 			
-			for (int i = 0; i < plosca2_barve.length; i++ ) {
+			for (int i = 0; i < plosca2_barve[0].length; i++ ) {
 				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
 				plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
 			}
@@ -311,7 +314,7 @@ public class Igra {
 			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
 				i1++;
 			}
-			Polje[] test1 = new Polje[4];
+			Polje[] test1 = new Polje[5];
 			for (int k1 = 0; k1 < test1.length; k1++) {
 				test1[k1] = Polje.PRAVILNO;
 			}
@@ -329,7 +332,7 @@ public class Igra {
 			while (plosca1_barve[i2][0] != Polje.PRAZNO) {
 				i2++;
 			}
-			Polje[] test2 = new Polje[4];
+			Polje[] test2 = new Polje[5];
 			for (int k2 = 0; k2 < test2.length; k2++) {
 				test2[k2] = Polje.PRAVILNO;
 			}

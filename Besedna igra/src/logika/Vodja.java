@@ -29,11 +29,12 @@ public class Vodja {
 					case V_TEKU:
 						System.out.println("VNESITE POSKUS:");
 						String poskus = p.readLine();
-						if (!igra.LST.contains(poskus)) {
+						
+						if (!igra.LST.contains(poskus.trim())) {
 							System.out.println("POSKUS NI VELJAVEN ");
 						}
 						else {
-							igra.posodobi_in_odigraj(poskus);
+							igra.posodobi_in_odigraj(poskus.trim());
 							//izpisi plosci in rezultate plosc
 						}
 					}
