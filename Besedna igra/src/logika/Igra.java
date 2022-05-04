@@ -338,8 +338,8 @@ public class Igra {
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
 			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
-				if (i2 == 5) break;
 				i2++;
+				if (i2 == 6) break;
 			}
 			if (i2 > 0) {
 				Polje[] test2 = new Polje[5];
