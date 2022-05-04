@@ -15,8 +15,8 @@ public class Igra {
 	public static final int V = 6;
 	public static final int S = 5;
 	
-	public static LinkedList<String> LST; 
-	static {
+	public LinkedList<String> LST; 
+	{
 		try {
 			LST = seznam_besed("src/besede.txt");
 		}
@@ -33,12 +33,13 @@ public class Igra {
 	protected Stanje stanje;
 	protected String beseda1;
 	protected String beseda2;
-	protected Jezik jezik;
+	//protected Jezik jezik;
 	protected ColorTheme color;
 	protected Cas cas;
 	
-	public Igra(Jezik jezik) {
-		this.jezik = jezik;
+	//Jezik jezik
+	public Igra() {
+		//this.jezik = jezik;
 		
 		stanje = new Stanje(LST.size());
 		Random rand = new Random();
@@ -160,7 +161,7 @@ public class Igra {
 	// ne ustrasi se :) triple je samo vnos (a, b, c) v javo, ker je to tu elegantno
 	// no vsaj jst tako menim :)
 	public int stevilo_moznih(int st_plosca) {
-		LinkedList<String> preostale = Igra.LST;
+		LinkedList<String> preostale = LST;
 		String[][] plosca;
 		Polje[][] barve;
 		
@@ -348,6 +349,17 @@ public class Igra {
 		posodobi();
 	}
 	
+	public StanjeEnum stanje_celota() {
+		if ((stanje.plosca1 == StanjeEnum.PORAZ) || (stanje.plosca2 == StanjeEnum.PORAZ)) {
+			return StanjeEnum.PORAZ;
+		}
+		else if ((stanje.plosca1 == StanjeEnum.ZMAGA) && (stanje.plosca2 == StanjeEnum.ZMAGA)) {
+			return StanjeEnum.ZMAGA;
+		}
+		else {
+			return StanjeEnum.V_TEKU;
+		}
+	}
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
 
 }
