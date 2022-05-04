@@ -304,10 +304,50 @@ public class Igra {
 		return ponovitve(str_lst, str).size();
 	}
 
-	//posodobi stanje in stevilo besed
+	public void posodobi() {
+		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
+			int i1 = 0;
+			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
+				i1++;
+			}
+			Polje[] test1 = new Polje[4];
+			for (int k1 = 0; k1 < test1.length; k1++) {
+				test1[k1] = Polje.PRAVILNO;
+			}
+			if (test1 == plosca1_barve[i1]) {
+				stanje.plosca1 = StanjeEnum.ZMAGA;
+				stanje.stevilo_moznosti1 = 0; 
+				}
+			else if (i1 == 5) {
+				stanje.plosca2 = StanjeEnum.PORAZ;
+				stanje.stevilo_moznosti1 = stevilo_moznih(1); 
+				}
+			}
+		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
+			int i2 = 0;
+			while (plosca1_barve[i2][0] != Polje.PRAZNO) {
+				i2++;
+			}
+			Polje[] test2 = new Polje[4];
+			for (int k2 = 0; k2 < test2.length; k2++) {
+				test2[k2] = Polje.PRAVILNO;
+			}
+			if (test2 == plosca1_barve[i2]) {
+				stanje.plosca1 = StanjeEnum.ZMAGA;
+				stanje.stevilo_moznosti1 = 0;
+			}
+			else if (i2 == 5) {
+				stanje.plosca2 = StanjeEnum.PORAZ;
+				stanje.stevilo_moznosti2 = stevilo_moznih(2); 
+				}
+			}
+		}
+	
+	public void posodobi_in_odigraj(String poteza) {
+		odigraj(poteza);
+		posodobi();
+	}
 	
 	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
-	
-	// cas
-	
+
 }
