@@ -31,6 +31,7 @@ public class Igra {
 	public Polje[][] plosca2_barve;
 	
 	protected Stanje stanje;
+	
 	protected String beseda1;
 	protected String beseda2;
 	//protected Jezik jezik;
@@ -38,6 +39,7 @@ public class Igra {
 	protected Cas cas;
 	
 	//Jezik jezik
+	@SuppressWarnings("unchecked")
 	public Igra() {
 		//this.jezik = jezik;
 		
@@ -46,7 +48,8 @@ public class Igra {
 		int i = rand.nextInt(LST.size());
 		beseda1 = LST.get(i);
 		
-		LinkedList<String> lst = LST;
+		LinkedList<String> lst = new LinkedList<String>();
+		lst = (LinkedList<String>) LST.clone();
 		lst.remove(beseda1);
 		
 		int j = rand.nextInt(lst.size());
@@ -109,10 +112,7 @@ public class Igra {
 	
 	public void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
-//		for (String znak : lst_poskus) {
-//			System.out.print(znak);
-//		}
-		if (stanje.plosca1 == StanjeEnum.V_TEKU && stanje.plosca2 == StanjeEnum.V_TEKU){
+		if ((stanje.plosca1 == StanjeEnum.V_TEKU) && (stanje.plosca2 == StanjeEnum.V_TEKU)){
 			int vrstica = 0;
 			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
@@ -238,12 +238,16 @@ public class Igra {
 					int niso_sivi = indexi.size();
 					for (int n = 0; n < indexi.size(); n++) {
 						if (barve[i][indexi.get(n)] == Polje.NAPACNO) {
-							ostali_mozni.remove(indexi.get(n));
-							niso_sivi--;
+							if (ostali_mozni.get(indexi.get(n)) != null) {
+								ostali_mozni.remove(indexi.get(n));
+								niso_sivi--;
+							}
 						}
 				
 						else if (barve[i][indexi.get(n)] == Polje.DELNOPRAVILNO) {
-							ostali_mozni.remove(indexi.get(n));
+							if (ostali_mozni.get(indexi.get(n)) != null) {
+								ostali_mozni.remove(indexi.get(n));
+							}
 						}
 						
 						else {
@@ -297,7 +301,7 @@ public class Igra {
 	public static LinkedList<Integer> ponovitve(String[] str_lst, String str) {
 		LinkedList<Integer> indexi = new LinkedList<Integer>();
 		for (int l = 0; l < str_lst.length; l++) {
-			if (str_lst[l] == str) {
+			if (str_lst[l].equals(str)) {
 				indexi.add(l);
 			}
 		}
@@ -313,36 +317,44 @@ public class Igra {
 			int i1 = 0;
 			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
 				i1++;
+				if (i1 == 6) break;
 			}
-			Polje[] test1 = new Polje[5];
-			for (int k1 = 0; k1 < test1.length; k1++) {
-				test1[k1] = Polje.PRAVILNO;
+			if (i1 > 0) {
+				Polje[] test1 = new Polje[5];
+				for (int k1 = 0; k1 < test1.length; k1++) {
+					test1[k1] = Polje.PRAVILNO;
+				}
+				if (Arrays.equals(test1, plosca1_barve[i1 - 1])) {
+					stanje.plosca1 = StanjeEnum.ZMAGA;
+					stanje.stevilo_moznosti1 = 0; 
+					}
+				else if (i1 == 6) {
+					stanje.plosca1 = StanjeEnum.PORAZ;
+//					stanje.stevilo_moznosti1 = stevilo_moznih(1); 
+					stanje.stevilo_moznosti1 = 0;
+					}
 			}
-			if (test1 == plosca1_barve[i1]) {
-				stanje.plosca1 = StanjeEnum.ZMAGA;
-				stanje.stevilo_moznosti1 = 0; 
-				}
-			else if (i1 == 5) {
-				stanje.plosca2 = StanjeEnum.PORAZ;
-				stanje.stevilo_moznosti1 = stevilo_moznih(1); 
-				}
 			}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
-			while (plosca1_barve[i2][0] != Polje.PRAZNO) {
+			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
+				if (i2 == 5) break;
 				i2++;
 			}
-			Polje[] test2 = new Polje[5];
-			for (int k2 = 0; k2 < test2.length; k2++) {
-				test2[k2] = Polje.PRAVILNO;
-			}
-			if (test2 == plosca1_barve[i2]) {
-				stanje.plosca1 = StanjeEnum.ZMAGA;
-				stanje.stevilo_moznosti1 = 0;
-			}
-			else if (i2 == 5) {
-				stanje.plosca2 = StanjeEnum.PORAZ;
-				stanje.stevilo_moznosti2 = stevilo_moznih(2); 
+			if (i2 > 0) {
+				Polje[] test2 = new Polje[5];
+				for (int k2 = 0; k2 < test2.length; k2++) {
+					test2[k2] = Polje.PRAVILNO;
+				}
+				if (Arrays.equals(test2, plosca2_barve[i2 - 1])) {
+					stanje.plosca2 = StanjeEnum.ZMAGA;
+					stanje.stevilo_moznosti2 = 0;
+				}
+				else if (i2 == 6) {
+					stanje.plosca2 = StanjeEnum.PORAZ;
+//					stanje.stevilo_moznosti2 = stevilo_moznih(2);
+					stanje.stevilo_moznosti2 = 0;
+					}
 				}
 			}
 		}

@@ -35,6 +35,13 @@ public class Vodja {
 						}
 						else {
 							igra.posodobi_in_odigraj(poskus.trim());
+							System.out.println(igra.beseda1);
+							System.out.println(igra.stanje.plosca1);
+							plosca_izpis(igra.plosca1_barve);
+							System.out.println("\n");
+							System.out.println(igra.beseda2);
+							System.out.println(igra.stanje.plosca2);
+							plosca_izpis(igra.plosca2_barve);
 							//izpisi plosci in rezultate plosc
 						}
 					}
@@ -52,4 +59,23 @@ public class Vodja {
 		}
 	}
 	
+	public static void plosca_izpis(Polje[][] plosca) {
+		for (Polje[] polja_i : plosca) {
+			for (Polje polja_j : polja_i) {
+				if (polja_j == Polje.PRAVILNO) {
+					System.out.print("2");
+				}
+				else if (polja_j == Polje.DELNOPRAVILNO) {
+					System.out.print("1");
+				}
+				else if (polja_j == Polje.NAPACNO) {
+					System.out.print("0");
+				}
+				else {
+					System.out.print("_");
+				}
+			}
+			System.out.print("\n");
+		}
+	}
 }
