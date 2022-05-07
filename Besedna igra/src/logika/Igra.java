@@ -4,9 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 
 public class Igra {
@@ -108,7 +110,7 @@ public class Igra {
 	}
 	
 	// funkcija, ki updejta vse stiri plosce glede na novo besedo 
-	// (preveri, ali sta obe plosci v teku), updejtamo stanje
+	// (preveri, ali sta obe plosci v teku)
 	
 	public void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
@@ -156,15 +158,12 @@ public class Igra {
 		else {
 			System.out.print("STANJE ZA VNOS POTEZE NI USTREZNO ! :(");
 		}
-		// spremeniva tu stanje/ga preveriva/zamenjava - 
-		// spremeniva stevilo moznosti po vsaki odigrani potezi 
 	}
 	
+	
 	// funkcija, ki preracuna stevilo moznih besed
-	// ne ustrasi se :) triple je samo vnos (a, b, c) v javo, ker je to tu elegantno
-	// no vsaj jst tako menim :)
 	public int stevilo_moznih(int st_plosca) {
-		LinkedList<String> preostale = LST;
+		Set<String> neustrezne = new HashSet<String>();
 		String[][] plosca;
 		Polje[][] barve;
 		
@@ -189,7 +188,8 @@ public class Igra {
 			String poskus = "";
 			String[] poskus_crke = plosca[i];
 			
-			Map<String, Triple<LinkedList<Integer>, LinkedList<Integer>, LinkedList<Integer>>> zahteve_crke = new HashMap<String, Triple<LinkedList<Integer>, LinkedList<Integer>, LinkedList<Integer>>>();
+			Map<String, Triple<Set<Integer>, Set<Integer>, Set<Integer>>> zahteve_crke = 
+					new HashMap<String, Triple<Set<Integer>, Set<Integer>, Set<Integer>>>();
 			
 			for (int j = 0; j < poskus_crke.length; j++) {
 				poskus += plosca[i][j];
@@ -205,49 +205,46 @@ public class Igra {
 					int index = poskus.indexOf(crka);
 					
 					if (barve[i][index] == Polje.PRAVILNO) {
-						LinkedList<Integer> potrebna = new LinkedList<Integer>(Arrays.asList(index));
-						LinkedList<Integer> mozna = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
-						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						Set<Integer> potrebna = new HashSet<Integer>(Arrays.asList(index));
+						Set<Integer> mozna = new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
+						Set<Integer> stevilo = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+						Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
 						zahteve_crke.put(crka, triple_crke);
 					}
 					
 					else if (barve[i][index] == Polje.DELNOPRAVILNO) {
-						LinkedList<Integer> potrebna = new LinkedList<Integer>();
-						LinkedList<Integer> mozna = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
+						Set<Integer> potrebna = new HashSet<Integer>();
+						Set<Integer> mozna = new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
 						mozna.remove(index);
-						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						Set<Integer> stevilo = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+						Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
 						zahteve_crke.put(crka, triple_crke);
 					}
 					
 					else {
-						LinkedList<Integer> potrebna = new LinkedList<Integer>();
-						LinkedList<Integer> mozna = new LinkedList<Integer>();
-						LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-						Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
+						Set<Integer> potrebna = new HashSet<Integer>();
+						Set<Integer> mozna = new HashSet<Integer>();
+						Set<Integer> stevilo = new HashSet<Integer>();
+						Triple<Set<Integer>, Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
 						zahteve_crke.put(crka, triple_crke);
 					}
 				}
 				
 				else {
 					LinkedList<Integer> indexi = ponovitve(poskus_crke, crka);
-					LinkedList<Integer> ostali_mozni = new LinkedList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
-					LinkedList<Integer> potrebni = new LinkedList<Integer>();
+					Set<Integer> ostali_mozni = new HashSet<Integer>();
+					Set<Integer> potrebni = new HashSet<Integer>();
+					Set<Integer> ne_dodamo = new HashSet<Integer>();
 					
 					int niso_sivi = indexi.size();
 					for (int n = 0; n < indexi.size(); n++) {
 						if (barve[i][indexi.get(n)] == Polje.NAPACNO) {
-							if (ostali_mozni.get(indexi.get(n)) != null) {
-								ostali_mozni.remove(indexi.get(n));
+								ne_dodamo.add(indexi.get(n));
 								niso_sivi--;
-							}
 						}
 				
 						else if (barve[i][indexi.get(n)] == Polje.DELNOPRAVILNO) {
-							if (ostali_mozni.get(indexi.get(n)) != null) {
-								ostali_mozni.remove(indexi.get(n));
-							}
+							ne_dodamo.add(indexi.get(n));
 						}
 						
 						else {
@@ -255,32 +252,42 @@ public class Igra {
 						}
 					}
 					
-					LinkedList<Integer> stevilo = new LinkedList<Integer>(Arrays.asList(niso_sivi));
-					Triple<LinkedList<Integer>,LinkedList<Integer>, LinkedList<Integer>> triple_crke= new Triple<>(potrebni, ostali_mozni, stevilo);
+					for (int h = 0; h < 6; h++) {
+						if (!ne_dodamo.contains(h)) {
+							ostali_mozni.add(h);
+						}
+					}
+					
+					Set<Integer> stevilo = new HashSet<Integer>();
+					while (niso_sivi < 6) {
+						stevilo.add(niso_sivi);
+						niso_sivi++;
+					}
+					Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebni, ostali_mozni, stevilo);
 					zahteve_crke.put(crka, triple_crke);
 				}
 			}
 			// za vsak element iz zahteve_crke treba iz preostale odtraniti tiste, ki ne zadoscajo
-			for (String beseda : preostale) {
+			for (String mogoce : LST) {
 				boolean ustreza = true;
 				
 				for (String crka : zahteve_crke.keySet()) {
 					//1 zahteva: fiksna pozicija crke
-					for (int index : zahteve_crke.get(crka).getFirst()) {
+					for (int ind : zahteve_crke.get(crka).getFirst()) {
 						String crka_of_char = "";
-						crka_of_char += beseda.charAt(index);
+						crka_of_char += mogoce.charAt(ind);
 						if (crka_of_char != crka) {
 							ustreza = false;
 						}
 					}
 					//2 zahteva: stevilo ponovitev te crke je lahko ze omejeno
-					int p = stevilo_ponovitev(beseda.split(""), crka);
+					int p = stevilo_ponovitev(mogoce.split(""), crka);
 					if (!zahteve_crke.get(crka).getThird().contains(p)) {
 						ustreza = false;
 					}
 					//3 zahteva: crka je lahko le na nekaterih mestih
-					LinkedList<Integer> ind = ponovitve(beseda.split(""), crka);
-					for (int poz : ind) {
+					LinkedList<Integer> indd = ponovitve(mogoce.split(""), crka);
+					for (int poz : indd) {
 						if (!zahteve_crke.get(crka).getSecond().contains(poz)) {
 							ustreza = false;
 						}
@@ -288,13 +295,13 @@ public class Igra {
 				}
 				
 				if (!ustreza) {
-					preostale.remove(beseda);
+					neustrezne.add(mogoce);
 				}
 			}
 			
 		}
 		
-		return preostale.size();
+		return LST.size() - neustrezne.size();
 	}
 	
 	//pomozne funkcije za stevilo_moznih...
@@ -330,11 +337,14 @@ public class Igra {
 					}
 				else if (i1 == 6) {
 					stanje.plosca1 = StanjeEnum.PORAZ;
-//					stanje.stevilo_moznosti1 = stevilo_moznih(1); 
+					stanje.stevilo_moznosti1 = stevilo_moznih(1);
 					stanje.stevilo_moznosti1 = 0;
-					}
+				}
+				else {
+					stanje.stevilo_moznosti1 = stevilo_moznih(1);
+				}
 			}
-			}
+		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
 			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
@@ -352,12 +362,15 @@ public class Igra {
 				}
 				else if (i2 == 6) {
 					stanje.plosca2 = StanjeEnum.PORAZ;
-//					stanje.stevilo_moznosti2 = stevilo_moznih(2);
+					stanje.stevilo_moznosti2 = stevilo_moznih(2);
 					stanje.stevilo_moznosti2 = 0;
 					}
+				else {
+					stanje.stevilo_moznosti2 = stevilo_moznih(2);
 				}
 			}
 		}
+	}
 	
 	public void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
