@@ -18,14 +18,6 @@ public class Igra {
 	public static final int S = 5;
 	
 	public LinkedList<String> LST; 
-	{
-		try {
-			LST = seznam_besed("besede.txt");
-		}
-		catch (IOException ex){
-			System.out.println("Datoteke besede.txt ne najde");
-		}
-	}
 	
 	public String[][] plosca1_vrednosti;
 	public String[][] plosca2_vrednosti;
@@ -39,15 +31,35 @@ public class Igra {
 	
 	protected LinkedList<String> zadoscajo1;
 	protected LinkedList<String> zadoscajo2;
-	//protected Jezik jezik;
+	protected Jezik jezik;
 	protected ColorTheme color;
 	protected Cas cas;
 	
 	//Jezik jezik
 	@SuppressWarnings("unchecked")
-	public Igra() {
-		//this.jezik = jezik;
+	public Igra(Jezik jezik) {
+		this.jezik = jezik;
 		
+		if (jezik == Jezik.ANG) {
+			{
+				try {
+					LST = seznam_besed("besede_ang.txt");
+				}
+				catch (IOException ex){
+					System.out.println("Datoteke besede.txt ne najde");
+				}
+			}
+		}
+		else {
+			{
+				try {
+					LST = seznam_besed("besede_slo.txt");
+				}
+				catch (IOException ex){
+					System.out.println("Datoteke besede.txt ne najde");
+				}
+			}
+		}
 		zadoscajo1 = (LinkedList<String>) LST.clone();
 		zadoscajo2 = (LinkedList<String>) LST.clone();
 		
@@ -81,8 +93,11 @@ public class Igra {
 		BufferedReader vhod = new BufferedReader (new FileReader(imeVhod));
 		LinkedList<String> sez = new LinkedList<String>();
 		while (vhod.ready()) {
-			String vrstica = vhod.readLine().trim();
-			sez.add(vrstica);
+			String vrstica = vhod.readLine();
+			String[] str_lst = vrstica.split(",");
+			for (int i = 0; i < str_lst.length; i++) {
+				sez.add(str_lst[i]);
+			}
 		}
 		vhod.close();
 		return sez;

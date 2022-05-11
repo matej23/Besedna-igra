@@ -16,7 +16,7 @@ public class Vodja {
 
 			String s = r.readLine();
 			if (s.equals("1")) {
-				Igra igra = new Igra();
+				Igra igra = new Igra(Jezik.ANG);
 				
 				igranje : while (true) {
 					switch (igra.stanje_celota()) {
