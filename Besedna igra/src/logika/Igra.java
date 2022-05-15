@@ -19,15 +19,15 @@ public class Igra {
 	
 	public LinkedList<String> LST; 
 	
-	public String[][] plosca1_vrednosti;
-	public String[][] plosca2_vrednosti;
-	public Polje[][] plosca1_barve;
-	public Polje[][] plosca2_barve;
+	public static String[][] plosca1_vrednosti;
+	public static String[][] plosca2_vrednosti;
+	public static Polje[][] plosca1_barve;
+	public static Polje[][] plosca2_barve;
 	
-	protected Stanje stanje;
+	protected static Stanje stanje;
 	
-	protected String beseda1;
-	protected String beseda2;
+	protected static String beseda1;
+	protected static String beseda2;
 	
 	protected LinkedList<String> zadoscajo1;
 	protected LinkedList<String> zadoscajo2;
@@ -133,7 +133,7 @@ public class Igra {
 	// funkcija, ki updejta vse stiri plosce glede na novo besedo 
 	// (preveri, ali sta obe plosci v teku)
 	
-	public void odigraj(String poskus) {
+	public static void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
 		if ((stanje.plosca1 == StanjeEnum.V_TEKU) && (stanje.plosca2 == StanjeEnum.V_TEKU)){
 			int vrstica = 0;
