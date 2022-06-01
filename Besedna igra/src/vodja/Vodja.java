@@ -48,7 +48,6 @@ public class Vodja {
 							System.out.println(igra.stanje.plosca2+ "\n");
 							System.out.print(igra.stanje.stevilo_moznosti2+ "\n");
 							plosca_izpis(igra.plosca2_barve);
-							//izpisi plosci in rezultate plosc
 						}
 					}
 				}
