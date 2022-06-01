@@ -1,8 +1,12 @@
-package logika;
+package vodja;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import logika.Igra;
+import logika.Jezik;
+import logika.Polje;
 
 public class Vodja {
 	

@@ -4,11 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
+import java.util.regex.Pattern;
+
 
 
 public class Igra {
@@ -24,13 +24,14 @@ public class Igra {
 	public static Polje[][] plosca1_barve;
 	public static Polje[][] plosca2_barve;
 	
-	protected static Stanje stanje;
+	public static Stanje stanje;
 	
-	protected static String beseda1;
-	protected static String beseda2;
+	public static String beseda1;
+	public static String beseda2;
 	
-	protected LinkedList<String> zadoscajo1;
-	protected LinkedList<String> zadoscajo2;
+	public LinkedList<String> mozneBesede1;
+	public LinkedList<String> mozneBesede2;
+	
 	protected Jezik jezik;
 	protected ColorTheme color;
 	protected Cas cas;
@@ -43,7 +44,7 @@ public class Igra {
 		if (jezik == Jezik.ANG) {
 			{
 				try {
-					LST = seznam_besed("besede_ang.txt");
+					LST = seznamBesed("besede_ang.txt");
 				}
 				catch (IOException ex){
 					System.out.println("Datoteke besede.txt ne najde");
@@ -53,15 +54,15 @@ public class Igra {
 		else {
 			{
 				try {
-					LST = seznam_besed("besede_slo.txt");
+					LST = seznamBesed("besede_slo.txt");
 				}
 				catch (IOException ex){
 					System.out.println("Datoteke besede.txt ne najde");
 				}
 			}
 		}
-		zadoscajo1 = (LinkedList<String>) LST.clone();
-		zadoscajo2 = (LinkedList<String>) LST.clone();
+		mozneBesede1 = (LinkedList<String>) LST.clone();
+		mozneBesede2 = (LinkedList<String>) LST.clone();
 		
 		stanje = new Stanje(LST.size());
 		Random rand = new Random();
@@ -89,7 +90,7 @@ public class Igra {
 		}
 	}
 	
-	public static LinkedList<String> seznam_besed (String imeVhod) throws IOException {
+	public static LinkedList<String> seznamBesed (String imeVhod) throws IOException {
 		BufferedReader vhod = new BufferedReader (new FileReader(imeVhod));
 		LinkedList<String> sez = new LinkedList<String>();
 		while (vhod.ready()) {
@@ -104,8 +105,7 @@ public class Igra {
 		
 	}
 	
-	// upam, da zdej to ok dela
-	public static Map<Integer, Polje> barva_za_vrednost(String geslo, String poskus) {
+	public static Map<Integer, Polje> barvaZaVrednost(String geslo, String poskus) {
 		Map<Integer, Polje> slovar = new HashMap<Integer, Polje>();
 		
 		String[] lst_poskus = poskus.split("");
@@ -140,8 +140,8 @@ public class Igra {
 			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
-			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
+			Map<Integer, Polje> barve_vrednosti1 = barvaZaVrednost(beseda1, poskus);
+			Map<Integer, Polje> barve_vrednosti2 = barvaZaVrednost(beseda2, poskus);
 			
 			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
@@ -156,7 +156,7 @@ public class Igra {
 			while (plosca1_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti1 = barva_za_vrednost(beseda1, poskus);
+			Map<Integer, Polje> barve_vrednosti1 = barvaZaVrednost(beseda1, poskus);
 			
 			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
@@ -169,7 +169,7 @@ public class Igra {
 			while (plosca2_barve[vrstica][0] != Polje.PRAZNO) {
 				vrstica++;
 			}
-			Map<Integer, Polje> barve_vrednosti2 = barva_za_vrednost(beseda2, poskus);
+			Map<Integer, Polje> barve_vrednosti2 = barvaZaVrednost(beseda2, poskus);
 			
 			for (int i = 0; i < plosca2_barve[0].length; i++ ) {
 				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
@@ -181,151 +181,64 @@ public class Igra {
 		}
 	}
 	
-	
-	// funkcija, ki preracuna stevilo moznih besed
-	public int stevilo_moznih(String poskus, int st_plosca) {
-		LinkedList<String> zadoscajo;
-		Map<Integer, Polje> vrednosti;
-		
-		if (st_plosca == 1) {
-			zadoscajo = zadoscajo1;
-			vrednosti = barva_za_vrednost(beseda1, poskus);
+	// pomozna funkcija za steviloMoznih 
+	public static boolean seUjema(String element, String poskus, String geslo) {
+		Map<Integer, Polje> slovar = barvaZaVrednost(geslo, poskus);
+		String[] lst_poskus = poskus.split("");
+		String zeleni = "";
+		String sivi = "";
+		String rumeni = "";
+		String vzorec = "";
+		for (int i = 0; i < poskus.length(); ++i) {
+			if (slovar.get(i) == Polje.PRAVILNO) {
+				zeleni += lst_poskus[i];
+			}
+			else if (slovar.get(i) == Polje.DELNOPRAVILNO) {
+				zeleni += ".";
+				rumeni += "(?=.*"+lst_poskus[i]+".*)";
+			}
+			else {
+				zeleni += ".";
+				sivi += lst_poskus[i];
+			}
 		}
-		else if (st_plosca == 2) {
-			zadoscajo = zadoscajo2;
-			vrednosti = barva_za_vrednost(beseda2, poskus);
+		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-z]{5})";
+		else vzorec += "([a-z]{5})";
+		for (int i = 0; i < poskus.length(); ++i) {
+			String pomozni = "";
+			if (!sivi.equals("")) {
+				pomozni += "[^" + sivi;
+				if (slovar.get(i) == Polje.DELNOPRAVILNO) {
+				pomozni += lst_poskus[i];
+				}
+				pomozni += "]";
+			}
+			vzorec += pomozni;
+		}
+		vzorec += "$";
+
+		return Pattern.matches(vzorec, element) && Pattern.matches(zeleni, element);
+	}
+	
+	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
+	
+	public int steviloMoznih(String poskus, int steviloPlosca) {
+		if (steviloPlosca == 1) {
+			for (String element : LST) {
+				if (!seUjema(element, poskus, beseda1)) {
+					mozneBesede1.remove(element);
+				}
+			}
+			return mozneBesede1.size();
 		}
 		else {
-			System.out.print("TA PLOSCA NE OBSTAJA");
-			return 0; 
+			for (String element : LST) {
+				if (!seUjema(element, poskus, beseda2)) {
+					mozneBesede2.remove(element);
+				}
+			}
+			return mozneBesede2.size();
 		}
-		
-		String[] crke = poskus.split("");
-		
-		Map<String, Triple<Set<Integer>, Set<Integer>, Set<Integer>>> zahteve_crke = 
-					new HashMap<String, Triple<Set<Integer>, Set<Integer>, Set<Integer>>>();
-		
-		for (Integer index : vrednosti.keySet()) {
-			if (stevilo_ponovitev(crke, crke[index]) == 1) {
-				int ind = poskus.indexOf(crke[index]);
-				
-				if (vrednosti.get(ind) == Polje.PRAVILNO) {
-					Set<Integer> potrebna = new HashSet<Integer>(Arrays.asList(index));
-					Set<Integer> mozna = new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
-					Set<Integer> stevilo = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-					
-					Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
-					zahteve_crke.put(crke[index], triple_crke);
-				}					
-					
-				else if (vrednosti.get(ind) == Polje.DELNOPRAVILNO) {
-					Set<Integer> potrebna = new HashSet<Integer>();
-					Set<Integer> mozna = new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
-					mozna.remove(ind);
-					Set<Integer> stevilo = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-					Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
-					zahteve_crke.put(crke[ind], triple_crke);
-					}
-					
-				else {//==Polje.NAPACNO
-					Set<Integer> potrebna = new HashSet<Integer>();
-					Set<Integer> mozna = new HashSet<Integer>();
-					Set<Integer> stevilo = new HashSet<Integer>(Arrays.asList(0));
-					Triple<Set<Integer>, Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
-					zahteve_crke.put(crke[ind], triple_crke);
-					}
-				}
-			
-				//vec ponovitev te crke(crke na tem indexu)
-				else {
-					LinkedList<Integer> indexi = ponovitve(crke, crke[index]);
-					
-					Set<Integer> mozna = new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5));
-					Set<Integer> potrebna = new HashSet<Integer>();
-					Set<Integer> stevilo = new HashSet<Integer>();
-					
-					Set<Integer> ni_te_crke =  new HashSet<Integer>();
-					int niso_sivi = indexi.size();
-					
-					for (int n = 0; n < indexi.size(); n++) {
-						if (vrednosti.get(n) == Polje.NAPACNO) {
-								mozna.remove(n);
-								ni_te_crke.add(indexi.get(n));
-								niso_sivi--;
-						}
-						
-						else if (vrednosti.get(n) == Polje.DELNOPRAVILNO) {
-							mozna.remove(n);
-						}
-						else {
-							potrebna.add(indexi.get(n));
-						}
-					}
-					
-					if (niso_sivi == indexi.size()) {
-						while (niso_sivi < 6) {
-							stevilo.add(niso_sivi);
-							niso_sivi++;
-						}
-					}
-					else {
-						stevilo.add(niso_sivi);
-					}
-					
-					Triple<Set<Integer>,Set<Integer>, Set<Integer>> triple_crke= new Triple<>(potrebna, mozna, stevilo);
-					zahteve_crke.put(crke[index], triple_crke);
-				}
-			}
-			
-			@SuppressWarnings("unchecked")
-			LinkedList<String> zadoscajo_clone = (LinkedList<String>) zadoscajo.clone();
-			for (String beseda : zadoscajo_clone) {
-				boolean ustreza = true;
-				
-				
-				for (String crka : zahteve_crke.keySet()) {
-					
-					//1 zahteva: fiksna pozicija crke
-					for (int k : zahteve_crke.get(crka).getFirst()) {
-						String crka_of_char = "";
-						crka_of_char += beseda.charAt(k);
-						if (crka_of_char != crka) {
-							ustreza = false;
-						}
-					}
-					
-					//2 zahteva: stevilo ponovitev te crke
-					int p = stevilo_ponovitev(beseda.split(""), crka);
-					if (!(zahteve_crke.get(crka).getThird().contains(p))) {
-						ustreza = false;
-					}
-					//3 zahteva: crka je lahko le na nekaterih mestih
-					LinkedList<Integer> indeksi = ponovitve(beseda.split(""), crka);
-					for (int poz : indeksi) {
-						if (!(zahteve_crke.get(crka).getSecond().contains(poz))) {
-							ustreza = false;
-						}
-					}
-				}
-				if (!ustreza) {
-					zadoscajo.remove(beseda);
-				}
-			}
-		return zadoscajo.size();
-	}
-	//pomozne funkcije za stevilo_moznih...
-	public static LinkedList<Integer> ponovitve(String[] str_lst, String str) {
-		LinkedList<Integer> indexi = new LinkedList<Integer>();
-		for (int l = 0; l < str_lst.length; l++) {
-			if (str_lst[l] == str) {
-				indexi.add(l);
-			}
-		}
-		return indexi;
-	}
-	
-	public static int stevilo_ponovitev(String[] str_lst, String str) {
-		return ponovitve(str_lst, str).size();
 	}
 
 	public void posodobi(String poteza) {
@@ -345,10 +258,10 @@ public class Igra {
 					}
 				else if (i1 == 6) {
 					stanje.plosca1 = StanjeEnum.PORAZ;
-					stanje.stevilo_moznosti1 = stevilo_moznih(poteza, 1);
+					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 				}
 				else {
-					stanje.stevilo_moznosti1 = stevilo_moznih(poteza, 1);
+					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 				}
 			}
 		}
@@ -368,10 +281,10 @@ public class Igra {
 				}
 				else if (i2 == 6) {
 					stanje.plosca2 = StanjeEnum.PORAZ;
-					stanje.stevilo_moznosti2 = stevilo_moznih(poteza, 2);
+					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 					}
 				else {
-					stanje.stevilo_moznosti2 = stevilo_moznih(poteza, 2);
+					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 				}
 			}
 		}
@@ -393,6 +306,6 @@ public class Igra {
 			return StanjeEnum.V_TEKU;
 		}
 	}
-	// v vodji: preveri, da je dovolj dolga beseda, so znaki ustrezni
+
 
 }

@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-import logika.Vodja;
+import vodja.Vodja;
 
 public class BesednaIgra {
 

@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import logika.Igra;
-import logika.Vodja;
+import vodja.Vodja;
 import logika.Cas;
 import logika.Analiza;
 import logika.Plosca;

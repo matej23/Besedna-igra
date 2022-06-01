@@ -1,10 +1,10 @@
 package logika;
 
 public class Stanje {
-	protected StanjeEnum plosca1;
-	protected StanjeEnum plosca2;
-	protected int stevilo_moznosti1;
-	protected int stevilo_moznosti2;
+	public StanjeEnum plosca1;
+	public StanjeEnum plosca2;
+	public int stevilo_moznosti1;
+	public int stevilo_moznosti2;
 	//todo
 	//a narediva da bo stevilo besed ze v stanju ? + opis z besedami zgoraj 
 	//
