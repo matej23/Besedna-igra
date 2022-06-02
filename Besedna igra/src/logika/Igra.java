@@ -17,7 +17,7 @@ public class Igra {
 	public static final int V = 6;
 	public static final int S = 5;
 	
-	public LinkedList<String> LST; 
+	public static LinkedList<String> LST; 
 	
 	public static String[][] plosca1_vrednosti;
 	public static String[][] plosca2_vrednosti;
@@ -29,10 +29,13 @@ public class Igra {
 	public static String beseda1;
 	public static String beseda2;
 	
-	public LinkedList<String> mozneBesede1;
-	public LinkedList<String> mozneBesede2;
+	public static LinkedList<Integer> steviloBesed1;
+	public static LinkedList<Integer> steviloBesed2;
 	
-	protected Jezik jezik;
+	public static LinkedList<String> mozneBesede1;
+	public static LinkedList<String> mozneBesede2;
+	
+	public static Jezik jezik;
 	protected ColorTheme color;
 	protected Cas cas;
 	
@@ -63,6 +66,9 @@ public class Igra {
 		}
 		mozneBesede1 = (LinkedList<String>) LST.clone();
 		mozneBesede2 = (LinkedList<String>) LST.clone();
+		
+		steviloBesed1 = new LinkedList<Integer>();
+		steviloBesed2 = new LinkedList<Integer>();
 		
 		stanje = new Stanje(LST.size());
 		Random rand = new Random();
@@ -222,7 +228,7 @@ public class Igra {
 	
 	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
 	
-	public int steviloMoznih(String poskus, int steviloPlosca) {
+	public static int steviloMoznih(String poskus, int steviloPlosca) {
 		if (steviloPlosca == 1) {
 			for (String element : LST) {
 				if (!seUjema(element, poskus, beseda1)) {
@@ -241,7 +247,7 @@ public class Igra {
 		}
 	}
 
-	public void posodobi(String poteza) {
+	public static void posodobi(String poteza) {
 		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
 			int i1 = 0;
 			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
@@ -259,9 +265,11 @@ public class Igra {
 				else if (i1 == 6) {
 					stanje.plosca1 = StanjeEnum.PORAZ;
 					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+					steviloBesed1.addLast(steviloMoznih(poteza,1));
 				}
 				else {
 					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+					steviloBesed1.addLast(steviloMoznih(poteza, 1));
 				}
 			}
 		}
@@ -282,15 +290,17 @@ public class Igra {
 				else if (i2 == 6) {
 					stanje.plosca2 = StanjeEnum.PORAZ;
 					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
+					steviloBesed2.addLast(steviloMoznih(poteza,2));
 					}
 				else {
 					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
+					steviloBesed2.addLast(steviloMoznih(poteza,2));
 				}
 			}
 		}
 	}
 	
-	public void posodobi_in_odigraj(String poteza) {
+	public static void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
 		posodobi(poteza);
 	}
