@@ -45,7 +45,7 @@ public class Igra {
 	@SuppressWarnings("unchecked")
 	public Igra(Jezik jezik) {
 		this.jezik = jezik;
-		barveCrke = new BarveCrke();
+		barveCrke = new BarveCrke(jezik);
 		
 		if (jezik == Jezik.ANG) {
 			{
@@ -73,20 +73,7 @@ public class Igra {
 		steviloBesed1 = new LinkedList<Integer>();
 		steviloBesed2 = new LinkedList<Integer>();
 		
-		if (jezik == Jezik.ANG) {
-			String [] crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-			for (String crka : crkeIzpis) {
-				barveCrke.barve1.put(crka, Polje.NAPACNO);
-				barveCrke.barve2.put(crka, Polje.NAPACNO);
-			}
-		}
-		else {
-			String [] crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
-			for (String crka : crkeIzpis) {
-				barveCrke.barve1.put(crka, Polje.NAPACNO);
-				barveCrke.barve2.put(crka, Polje.NAPACNO);
-			}
-		}
+
 		stanje = new Stanje(LST.size());
 		Random rand = new Random();
 		int i = rand.nextInt(LST.size());
@@ -324,7 +311,7 @@ public class Igra {
 	public static void posodobiCrke(HashMap<String, Polje> barve, int plosca) {
 		String[][] plosca_vrednosti;
 		Polje[][] barve_vrednosti;
-		if (plosca ==1) {
+		if (plosca == 1) {
 			plosca_vrednosti = plosca1_vrednosti;
 			barve_vrednosti = plosca1_barve;
 		}

@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,10 +11,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -27,8 +35,8 @@ import logika.StanjeEnum;
 
 public class GlavnoOkno{
 
-   public static void main(String[] args) {
-	  Igra igra = new Igra(Jezik.ANG);
+   public static void main(String[] args) throws IOException {
+	  Igra igra = new Igra(Jezik.SLO);
       Okno okno = new Okno(igra);
       okno.pack();
       okno.setVisible(true);
@@ -43,7 +51,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
    private Platno platno1;
    private Platno platno2;
 
-   public Okno(Igra igra) {
+   public Okno(Igra igra) throws IOException {
       super();
       setTitle("Besedna igra");
       
@@ -51,15 +59,17 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       platno2 = new Platno(2);     
       
       Crke crke = new Crke(Igra.jezik);
+
+      JPanel up = new JPanel();
+      up.setSize(new Dimension(1000, 100));
+  
       
       JTextField input = new JTextField(50); 
       input.addActionListener(this);
       input.addKeyListener(this);
       input.setSize(new Dimension(30,20));
       input.setFont(new Font("TimesRoman", Font.BOLD, 15));
-      
-      JPanel up = new JPanel();
-      up.setSize(new Dimension(1000, 100));
+     
       JButton b = new JButton("NOVA IGRA");
       b.addActionListener(this);
       b.setBounds(200, 100, 300, 50);
@@ -68,6 +78,20 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       
       up.add(b, BorderLayout.LINE_START);
       up.add(bJezik, BorderLayout.CENTER);
+      
+      if (Igra.jezik == Jezik.SLO) {
+          BufferedImage myPicture = ImageIO.read(new File("slo_zastava.png"));
+          BufferedImage myPicture_scale = scale(myPicture, 50, 28);
+          JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
+          
+          up.add(picture);
+      }
+      else {
+          BufferedImage myPicture = ImageIO.read(new File("ang_zastava.png"));
+          BufferedImage myPicture_scale = scale(myPicture, 50, 28);
+          JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
+          up.add(picture);
+      }
       
       JPanel bottom = new JPanel();
       bottom.setSize(new Dimension(1000, 100));
@@ -79,6 +103,16 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       add(bottom, BorderLayout.AFTER_LAST_LINE);
       add(up, BorderLayout.PAGE_START);
       
+   }
+   public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
+       BufferedImage scaledImage = null;
+       if (imageToScale != null) {
+           scaledImage = new BufferedImage(dWidth, dHeight, imageToScale.getType());
+           Graphics2D graphics2D = scaledImage.createGraphics();
+           graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
+           graphics2D.dispose();
+       }
+       return scaledImage;
    }
 
 @Override
