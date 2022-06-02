@@ -29,6 +29,8 @@ public class Igra {
 	public static String beseda1;
 	public static String beseda2;
 	
+	public static BarveCrke barveCrke;
+	
 	public static LinkedList<Integer> steviloBesed1;
 	public static LinkedList<Integer> steviloBesed2;
 	
@@ -43,6 +45,7 @@ public class Igra {
 	@SuppressWarnings("unchecked")
 	public Igra(Jezik jezik) {
 		this.jezik = jezik;
+		barveCrke = new BarveCrke();
 		
 		if (jezik == Jezik.ANG) {
 			{
@@ -70,6 +73,20 @@ public class Igra {
 		steviloBesed1 = new LinkedList<Integer>();
 		steviloBesed2 = new LinkedList<Integer>();
 		
+		if (jezik == Jezik.ANG) {
+			String [] crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+			for (String crka : crkeIzpis) {
+				barveCrke.barve1.put(crka, Polje.NAPACNO);
+				barveCrke.barve2.put(crka, Polje.NAPACNO);
+			}
+		}
+		else {
+			String [] crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
+			for (String crka : crkeIzpis) {
+				barveCrke.barve1.put(crka, Polje.NAPACNO);
+				barveCrke.barve2.put(crka, Polje.NAPACNO);
+			}
+		}
 		stanje = new Stanje(LST.size());
 		Random rand = new Random();
 		int i = rand.nextInt(LST.size());
@@ -266,10 +283,12 @@ public class Igra {
 					stanje.plosca1 = StanjeEnum.PORAZ;
 					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 					steviloBesed1.addLast(steviloMoznih(poteza,1));
+					posodobiCrke(barveCrke.barve1, 1);
 				}
 				else {
 					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 					steviloBesed1.addLast(steviloMoznih(poteza, 1));
+					posodobiCrke(barveCrke.barve1, 1);
 				}
 			}
 		}
@@ -291,15 +310,44 @@ public class Igra {
 					stanje.plosca2 = StanjeEnum.PORAZ;
 					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 					steviloBesed2.addLast(steviloMoznih(poteza,2));
+					posodobiCrke(barveCrke.barve2, 2);
 					}
 				else {
 					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 					steviloBesed2.addLast(steviloMoznih(poteza,2));
+					posodobiCrke(barveCrke.barve2, 2);
 				}
 			}
 		}
 	}
 	
+	public static void posodobiCrke(HashMap<String, Polje> barve, int plosca) {
+		String[][] plosca_vrednosti;
+		Polje[][] barve_vrednosti;
+		if (plosca ==1) {
+			plosca_vrednosti = plosca1_vrednosti;
+			barve_vrednosti = plosca1_barve;
+		}
+		else {
+			plosca_vrednosti = plosca2_vrednosti;
+			barve_vrednosti = plosca2_barve;
+		}
+		for (int i = 0; i < plosca_vrednosti.length; i++) {
+			   for (int j = 0; j < plosca_vrednosti[0].length; j++) {
+				   if (barve_vrednosti[i][j] == Polje.PRAVILNO) {
+					   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.PRAVILNO);
+				   }
+				   else if (barve_vrednosti[i][j] == Polje.NAPACNO) {
+					   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.NAPACNO);
+				   }
+				   else if (barve_vrednosti[i][j] == Polje.DELNOPRAVILNO) {
+					   if (barveCrke.barve1.get(plosca_vrednosti[i][j]) == Polje.PRAZNO) {
+						   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.DELNOPRAVILNO);
+					   }
+				   }
+			   }
+		}
+	}
 	public static void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
 		posodobi(poteza);
@@ -319,3 +367,5 @@ public class Igra {
 
 
 }
+
+

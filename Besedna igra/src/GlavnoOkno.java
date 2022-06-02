@@ -10,14 +10,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
 import java.util.LinkedList;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
+
+import logika.BarveCrke;
 import logika.Igra;
 import logika.Jezik;
 import logika.Polje;
@@ -28,7 +27,7 @@ import logika.StanjeEnum;
 public class GlavnoOkno{
 
    public static void main(String[] args) {
-	  Igra igra = new Igra(Jezik.SLO);
+	  Igra igra = new Igra(Jezik.ANG);
       Okno okno = new Okno(igra);
       okno.pack();
       okno.setVisible(true);
@@ -109,37 +108,19 @@ class Crke extends JPanel{
 	String[] crkeIzpis;
 	int crkeVrstica;
 	
-	HashMap<String, Polje> barve1= new HashMap<String, Polje>();
-	HashMap<String, Polje> barve2= new HashMap<String, Polje>();
-	
-	private Polje[][] barve_polja1;
-	private String[][] plosca_vrednosti1;
-	private Polje[][] barve_polja2;
-	private String[][] plosca_vrednosti2;
+	BarveCrke barveCrke;
 	
 	public Crke(Jezik jezik) {
 		setPreferredSize(new Dimension(400, 400));
-	    barve_polja1 = Igra.plosca1_barve;
-	    plosca_vrednosti1 = Igra.plosca1_vrednosti;
-	    
-	    barve_polja2 = Igra.plosca2_barve;
-	    plosca_vrednosti2 = Igra.plosca2_vrednosti;
-
+		barveCrke = Igra.barveCrke;
+		
 		if (jezik == Jezik.ANG) {
 			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-			crkeVrstica = 6;
-			for (String crka : crkeIzpis) {
-				barve1.put(crka, Polje.NAPACNO);
-				barve2.put(crka, Polje.NAPACNO);
-			}
+			crkeVrstica = 4;
 		}
 		else {
 			crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
 			crkeVrstica = 5;
-			for (String crka : crkeIzpis) {
-				barve1.put(crka, Polje.NAPACNO);
-				barve2.put(crka, Polje.NAPACNO);
-			}
 		}
 	}
 	
@@ -157,58 +138,15 @@ class Crke extends JPanel{
 		   int x = 50;
 		   int y = 75;
 		   
-		   for (int i = 0; i < plosca_vrednosti1.length; i++) {
-			   for (int j = 0; j < plosca_vrednosti1[0].length; j++) {
-				   if (barve_polja1[i][j] == Polje.PRAVILNO) {
-					   barve1.put(plosca_vrednosti1[i][j], Polje.PRAVILNO);
-				   }
-				   else if (barve_polja1[i][j] == Polje.NAPACNO) {
-					   barve1.put(plosca_vrednosti1[i][j], Polje.NAPACNO);
-				   }
-				   else if (barve_polja1[i][j] == Polje.DELNOPRAVILNO) {
-					   if (barve1.get(plosca_vrednosti1[i][j]) == Polje.PRAZNO) {
-						   barve1.put(plosca_vrednosti1[i][j], Polje.DELNOPRAVILNO);
-					   }
-					   else {
-						   continue;
-					   }
-				   }
-				   else {
-					   continue;
-				   }
-			   }
-		   }
-		   for (int k = 0; k < plosca_vrednosti2.length; k++) {
-			   for (int l = 0; l < plosca_vrednosti2[0].length; l++) {
-				   if (barve_polja2[k][l] == Polje.PRAVILNO) {
-					   barve2.put(plosca_vrednosti2[k][l], Polje.PRAVILNO);
-				   }
-				   else if (barve_polja2[k][l] == Polje.NAPACNO) {
-					   barve2.put(plosca_vrednosti2[k][l], Polje.NAPACNO);
-				   }
-				   else if (barve_polja2[k][l] == Polje.DELNOPRAVILNO) {
-					   if (barve2.get(plosca_vrednosti2[k][l]) == Polje.PRAZNO) {
-						   barve2.put(plosca_vrednosti2[k][l], Polje.DELNOPRAVILNO);
-					   }
-					   else {
-						   continue;
-					   }
-				   }
-				   else {
-					   continue;
-				   }
-			   }
-		   }
-		   
 		   int m = crkeVrstica;
 		   for (String crka : crkeIzpis) {
-			   if (barve1.get(crka) == Polje.DELNOPRAVILNO) {
+			   if (barveCrke.barve1.get(crka) == Polje.DELNOPRAVILNO) {
 				   g.setColor(delno_pravilno);
 			   }
-			   else if (barve1.get(crka) == Polje.PRAVILNO) {
+			   else if (barveCrke.barve1.get(crka) == Polje.PRAVILNO) {
 				   g.setColor(pravilno);
 			   }
-			   else if (barve1.get(crka) == Polje.NAPACNO) {
+			   else if (barveCrke.barve1.get(crka) == Polje.NAPACNO) {
 				   g.setColor(napacno);
 			   }
 			   else {
