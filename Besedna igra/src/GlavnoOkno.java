@@ -21,6 +21,8 @@ import javax.swing.border.Border;
 import logika.Igra;
 import logika.Jezik;
 import logika.Polje;
+import logika.Stanje;
+import logika.StanjeEnum;
 
 
 public class GlavnoOkno{
@@ -153,7 +155,7 @@ class Crke extends JPanel{
 		   Color delno_pravilno = new Color(250,250,50);
 		   
 		   int x = 50;
-		   int y = 50;
+		   int y = 75;
 		   
 		   for (int i = 0; i < plosca_vrednosti1.length; i++) {
 			   for (int j = 0; j < plosca_vrednosti1[0].length; j++) {
@@ -199,7 +201,6 @@ class Crke extends JPanel{
 		   }
 		   
 		   int m = crkeVrstica;
-		   
 		   for (String crka : crkeIzpis) {
 			   if (barve1.get(crka) == Polje.DELNOPRAVILNO) {
 				   g.setColor(delno_pravilno);
@@ -214,22 +215,22 @@ class Crke extends JPanel{
 				   g.setColor(prazno);
 			   }
 			   
-			   if (m > 0) {
+			   if (m > 1) {
 				   g.fillRect(x, y, 45, 45);
 				   g.setColor(Color.BLACK); 
-				   Rectangle rectangle = new Rectangle(x,y,45,45);
+				   Rectangle rectangle = new Rectangle(x, y, 45, 45);
 				   centerString(g, rectangle,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 				   m-= 1;
 				   x += 50;
 			   }
 			   else {
-				   x = 50;
-				   y+= 50;
+				   g.fillRect(x, y, 45, 45);
 				   g.setColor(Color.BLACK);
-				   g.fillRoundRect(x, y, 45, 45 , 5, 5);
-				   Rectangle rectangle = new Rectangle(x,y,50,50);
-				   centerString(g,rectangle,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
+				   Rectangle rectangle2 = new Rectangle(x, y, 45, 45);
+				   centerString(g,rectangle2,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 				   m = crkeVrstica;
+				   x = 50;
+				   y += 50;
 			   }
 		   }
 	}
@@ -256,12 +257,14 @@ class Crke extends JPanel{
 @SuppressWarnings("serial")
 class Platno extends JPanel {
 	int st_plosce;
+	Stanje stanje;
 	private Polje[][] barve_polja;
 	private String[][] plosca_vrednosti;
 	LinkedList<Integer> steviloBesed;
 	
    public Platno(int st_plosce) {
       setPreferredSize(new Dimension(600, 600));
+      stanje = Igra.stanje;
       this.st_plosce = st_plosce;
 
       if (st_plosce == 1) {
@@ -282,6 +285,19 @@ class Platno extends JPanel {
    }
 
    public void draw(Graphics g){
+	   StanjeEnum stanjeEnum;
+	   if (st_plosce == 1) {
+		   stanjeEnum = stanje.plosca1;
+	   }
+	   else {
+		   stanjeEnum = stanje.plosca2;
+	   }
+	   if (stanjeEnum == StanjeEnum.PORAZ) {
+		   setBackground(new Color(255, 150, 150));
+	   }
+	   else if(stanjeEnum == StanjeEnum.ZMAGA) {
+		   setBackground(new Color(150, 255, 150));
+	   }
 	   Color prazno = new Color(210, 210, 210); 
 	   Color napacno = new Color(175, 170, 170);
 	   Color pravilno = new Color(0,204,0);
