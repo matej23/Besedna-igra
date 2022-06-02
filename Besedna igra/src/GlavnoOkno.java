@@ -12,6 +12,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -57,18 +58,26 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       input.setSize(new Dimension(30,20));
       input.setFont(new Font("TimesRoman", Font.BOLD, 15));
       
+      JPanel up = new JPanel();
+      up.setSize(new Dimension(1000, 100));
+      JButton b = new JButton("NOVA IGRA");
+      b.addActionListener(this);
+      b.setBounds(200, 100, 300, 50);
+      JButton bJezik = new JButton("SPREMENI JEZIK");
+      bJezik.addActionListener(this);
+      
+      up.add(b, BorderLayout.LINE_START);
+      up.add(bJezik, BorderLayout.CENTER);
+      
       JPanel bottom = new JPanel();
       bottom.setSize(new Dimension(1000, 100));
       bottom.add(input, BoxLayout.X_AXIS);
-      
-//      Border blackline = BorderFactory.createLineBorder(Color.black);
-//      bottom.setBorder(blackline);
-
       
       add(platno1, BorderLayout.LINE_START);
       add(platno2, BorderLayout.CENTER);
       add(crke, BorderLayout.LINE_END);
       add(bottom, BorderLayout.AFTER_LAST_LINE);
+      add(up, BorderLayout.PAGE_START);
       
    }
 
@@ -78,7 +87,7 @@ public void actionPerformed(ActionEvent e) {
 	String text = text_l.toLowerCase();
 	Igra.posodobi_in_odigraj(text);
 	repaint();
-	}
+}
 
 
 @Override
@@ -97,7 +106,6 @@ public void keyTyped(KeyEvent e) {
 public void keyPressed(KeyEvent e) {
 	// TODO Auto-generated method stub
 }
-
 }
 
 @SuppressWarnings("serial")
