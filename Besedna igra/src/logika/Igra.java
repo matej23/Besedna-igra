@@ -213,7 +213,7 @@ public class Igra {
 			}
 		}
 		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-zčšž]{5})";
-		else vzorec += "([a-z]{5})";
+		else vzorec += "([a-zčšž]{5})";
 		for (int i = 0; i < poskus.length(); ++i) {
 			String pomozni = "";
 			if (!sivi.equals("")) {
@@ -268,16 +268,11 @@ public class Igra {
 					}
 				else if (i1 == 6) {
 					stanje.plosca1 = StanjeEnum.PORAZ;
-					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
-					steviloBesed1.addLast(steviloMoznih(poteza,1));
-					posodobiCrke(barveCrke.barve1, 1);
-				}
-				else {
-					stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
-					steviloBesed1.addLast(steviloMoznih(poteza, 1));
-					posodobiCrke(barveCrke.barve1, 1);
-				}
+					}	
 			}
+			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+			steviloBesed1.addLast(steviloMoznih(poteza, 1));
+			posodobiCrke(barveCrke.barve1, 1);
 		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
@@ -295,16 +290,11 @@ public class Igra {
 				}
 				else if (i2 == 6) {
 					stanje.plosca2 = StanjeEnum.PORAZ;
-					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
-					steviloBesed2.addLast(steviloMoznih(poteza,2));
-					posodobiCrke(barveCrke.barve2, 2);
 					}
-				else {
-					stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
-					steviloBesed2.addLast(steviloMoznih(poteza,2));
-					posodobiCrke(barveCrke.barve2, 2);
-				}
 			}
+			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
+			steviloBesed2.addLast(steviloMoznih(poteza,2));
+			posodobiCrke(barveCrke.barve2, 2);
 		}
 	}
 	

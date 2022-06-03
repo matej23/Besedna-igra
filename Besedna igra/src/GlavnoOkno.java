@@ -412,15 +412,9 @@ class Platno extends JPanel {
 			   x+= 70;
 		   }
 		   if (barve_polja[i][0] != Polje.PRAZNO) {
-			   if (st_plosce == 1) {
-				   //TODO
-				   String moznostiStr = Integer.toString(steviloBesed.get(i));
-				   g.drawString(moznostiStr, x + 10, y + 50);
-			   }
-			   else {
-				   String moznostiStr = Integer.toString(steviloBesed.get(i));
-				   g.drawString(moznostiStr, x + 10, y + 50);
-			   }
+			   String moznostiStr = Integer.toString(steviloBesed.get(i));
+			   g.drawString(moznostiStr, x + 10, y + 50);
+			   
 		   }
 		   x = 70;
 		   y+= 70;
