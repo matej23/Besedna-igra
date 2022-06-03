@@ -17,13 +17,17 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import logika.BarveCrke;
 import logika.Igra;
@@ -36,7 +40,7 @@ import logika.StanjeEnum;
 public class GlavnoOkno{
 
    public static void main(String[] args) throws IOException {
-	  Igra igra = new Igra(Jezik.SLO);
+	  Igra igra = new Igra(Jezik.ANG);
       Okno okno = new Okno(igra);
       okno.pack();
       okno.setVisible(true);
@@ -48,15 +52,16 @@ public class GlavnoOkno{
 @SuppressWarnings("serial")
 class Okno extends JFrame implements ActionListener, KeyListener{
 
-   private Platno platno1;
-   private Platno platno2;
+   private static Platno platno1;
+   private static Platno platno2;
+   //private static Igra igra;
 
    public Okno(Igra igra) throws IOException {
       super();
       setTitle("Besedna igra");
-      
       platno1 = new Platno(1);
       platno2 = new Platno(2);     
+      //this.igra = igra;
       
       Crke crke = new Crke(Igra.jezik);
 
@@ -64,44 +69,138 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       up.setSize(new Dimension(1000, 100));
   
       
-      JTextField input = new JTextField(50); 
-      input.addActionListener(this);
+      JTextField input = new JTextField(8); 
+      input.addActionListener(this);    
       input.addKeyListener(this);
-      input.setSize(new Dimension(30,20));
-      input.setFont(new Font("TimesRoman", Font.BOLD, 15));
-     
-      JButton b = new JButton("NOVA IGRA");
-      b.addActionListener(this);
-      b.setBounds(200, 100, 300, 50);
-      JButton bJezik = new JButton("SPREMENI JEZIK");
-      bJezik.addActionListener(this);
+      input.setFont(new Font("TimesRoman", Font.BOLD, 25));
+      input.setHorizontalAlignment(JTextField.CENTER);
+      
+      JButton b;
+      if (Igra.jezik == Jezik.ANG) {
+    	  b = new JButton("NEW GAME");
+      }
+      else {
+    	  b = new JButton("NOVA IGRA");
+      }
+      b.setPreferredSize(new Dimension(180, 40));
+      b.setBackground(new Color(175, 170, 170));
+      b.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+      b.setForeground(Color.WHITE);
+      b.addActionListener(new ActionListener() {
+    	  public void actionPerformed(ActionEvent e) {
+    		  if(e.getSource() == b) {
+    			  Igra novaIgra = new Igra(Igra.jezik);
+    			  }
+	       }
+	 });
+      JButton bJezik;
+      if (Igra.jezik == Jezik.ANG) {
+    	  bJezik = new JButton("CHANGE LANGUAGE");
+    	  bJezik.setPreferredSize(new Dimension(290, 40));
+      }
+      else {
+    	  bJezik = new JButton("SPREMENI JEZIK");
+    	  bJezik.setPreferredSize(new Dimension(250, 40));
+      }
+      bJezik.setBackground(new Color(175, 170, 170));
+      bJezik.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+      bJezik.setForeground(Color.WHITE);
+      bJezik.addActionListener(new ActionListener() {
+    	  public void actionPerformed(ActionEvent e) {
+    		  if(e.getSource() == b) {
+    			  if (Igra.jezik == Jezik.ANG) {
+    				  Igra novaIgra = new Igra(Jezik.SLO);
+    			  }
+    			  else {
+    				  Igra novaIgra = new Igra(Jezik.ANG);
+    			  }
+    		  }
+    	  }
+	 });
       
       up.add(b, BorderLayout.LINE_START);
       up.add(bJezik, BorderLayout.CENTER);
       
       if (Igra.jezik == Jezik.SLO) {
           BufferedImage myPicture = ImageIO.read(new File("slo_zastava.png"));
-          BufferedImage myPicture_scale = scale(myPicture, 50, 28);
+          BufferedImage myPicture_scale = scale(myPicture, 70, 40);
           JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
           
           up.add(picture);
       }
       else {
           BufferedImage myPicture = ImageIO.read(new File("ang_zastava.png"));
-          BufferedImage myPicture_scale = scale(myPicture, 50, 28);
+          BufferedImage myPicture_scale = scale(myPicture, 70, 40);
           JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
           up.add(picture);
       }
-      
       JPanel bottom = new JPanel();
       bottom.setSize(new Dimension(1000, 100));
-      bottom.add(input, BoxLayout.X_AXIS);
+      
+      JButton bInput;
+      if (Igra.jezik == Jezik.ANG) {
+    	  bInput= new JButton("ENTER");
+      }
+      else {
+    	  bInput= new JButton("VNESI");
+      }
+      //getRootPane().setDefaultButton(bInput);
+      bInput.setPreferredSize(new Dimension(120, 40));
+      bInput.setBackground(new Color(175, 170, 170));
+      bInput.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+      bInput.setForeground(Color.WHITE);
+      bInput.addActionListener(new ActionListener() {
+    	  public void actionPerformed(ActionEvent e) {
+    		  if(e.getSource() == bInput) {
+    			String textU = input.getText();
+    			String textL = textU.toLowerCase();
+    			if (textL.length() > 5) {
+    				input.setText("");
+    				if (Igra.jezik == Jezik.ANG) {
+    					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO LONG");
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(platno2, "BESEDA KI STE JO VNESLI JE PREDOLGA");
+    				}
+    			}
+    			else if (textL.length() < 5) {
+    				input.setText("");
+    				if (Igra.jezik == Jezik.ANG) {
+    					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO SHORT");
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(platno2, "BESEDA KI STE JO VNESLI JE PREKRATKA");
+    				}
+    			}
+    			else {
+    				if (!Igra.LST.contains(textL)) {
+    					input.setText("");
+    					if (Igra.jezik == Jezik.ANG) {
+    						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY");
+    					}
+    					else {
+    						JOptionPane.showMessageDialog(platno2, "VNEŠENE BESEDE NI V SLOVARJU");
+    					}
+    				}
+        			else {
+            			Igra.posodobi_in_odigraj(textL);
+            			repaint();
+            			input.setText("");
+        			}
+    			}
+    		  }
+    	  }
+	 });
+      bottom.add(input);
+      bottom.add(bInput);
       
       add(platno1, BorderLayout.LINE_START);
       add(platno2, BorderLayout.CENTER);
       add(crke, BorderLayout.LINE_END);
       add(bottom, BorderLayout.AFTER_LAST_LINE);
       add(up, BorderLayout.PAGE_START);
+      rootPane.setDefaultButton(bInput);
+      
       
    }
    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
@@ -138,8 +237,8 @@ public void keyTyped(KeyEvent e) {
 
 @Override
 public void keyPressed(KeyEvent e) {
-	// TODO Auto-generated method stub
 }
+
 }
 
 @SuppressWarnings("serial")
@@ -177,7 +276,7 @@ class Crke extends JPanel{
 		   Color pravilno = new Color(0,204,0);
 		   Color delno_pravilno = new Color(250,250,50);
 		   
-		   int x = 50;
+		   int x = 100;
 		   int y = 75;
 		   
 		   int m = crkeVrstica;
@@ -209,7 +308,7 @@ class Crke extends JPanel{
 				   Rectangle rectangle2 = new Rectangle(x, y, 45, 45);
 				   centerString(g,rectangle2,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 				   m = crkeVrstica;
-				   x = 50;
+				   x = 100;
 				   y += 50;
 			   }
 		   }
@@ -243,7 +342,7 @@ class Platno extends JPanel {
 	LinkedList<Integer> steviloBesed;
 	
    public Platno(int st_plosce) {
-      setPreferredSize(new Dimension(600, 600));
+      setPreferredSize(new Dimension(550, 550));
       stanje = Igra.stanje;
       this.st_plosce = st_plosce;
 
