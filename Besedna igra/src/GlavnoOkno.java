@@ -40,7 +40,7 @@ import logika.StanjeEnum;
 public class GlavnoOkno{
 
    public static void main(String[] args) throws IOException {
-	  Igra igra = new Igra(Jezik.ANG);
+	  Igra igra = new Igra(Jezik.SLO);
       Okno okno = new Okno(igra);
       okno.pack();
       okno.setVisible(true);
@@ -245,6 +245,8 @@ public void keyPressed(KeyEvent e) {
 //---------------------------------------------------
 class Crke extends JPanel{
 	
+	String geslo1;
+	String geslo2;
 	Jezik jezik;
 	String[] crkeIzpis;
 	int crkeVrstica;
@@ -254,6 +256,8 @@ class Crke extends JPanel{
 	public Crke(Jezik jezik) {
 		setPreferredSize(new Dimension(400, 400));
 		barveCrke = Igra.barveCrke;
+		geslo1 = Igra.beseda1;
+		geslo2 = Igra.beseda2;
 		
 		if (jezik == Jezik.ANG) {
 			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -312,6 +316,10 @@ class Crke extends JPanel{
 				   y += 50;
 			   }
 		   }
+		   Rectangle rectangle3 = new Rectangle(x, y, 100,50);
+		   centerString(g,rectangle3,geslo1.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
+		   Rectangle rectangle4 = new Rectangle(x, y + 60, 100, 50);
+		   centerString(g,rectangle4,geslo2.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 	}
 	
 	public void centerString(Graphics g, Rectangle r, String s, Font font) {
