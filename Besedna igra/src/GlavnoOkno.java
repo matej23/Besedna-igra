@@ -17,17 +17,13 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import logika.BarveCrke;
 import logika.Igra;
@@ -63,7 +59,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       platno2 = new Platno(2);     
       //this.igra = igra;
       
-      Crke crke = new Crke(Igra.jezik);
+      Crke crke = new Crke(igra.jezik);
 
       JPanel up = new JPanel();
       up.setSize(new Dimension(1000, 100));
@@ -76,7 +72,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       input.setHorizontalAlignment(JTextField.CENTER);
       
       JButton b;
-      if (Igra.jezik == Jezik.ANG) {
+      if (igra.jezik == Jezik.ANG) {
     	  b = new JButton("NEW GAME");
       }
       else {
@@ -89,12 +85,13 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       b.addActionListener(new ActionListener() {
     	  public void actionPerformed(ActionEvent e) {
     		  if(e.getSource() == b) {
-    			  Igra novaIgra = new Igra(Igra.jezik);
+    			  Igra novaIgra = new Igra(igra.jezik);
+    			  //TODO
     			  }
 	       }
 	 });
       JButton bJezik;
-      if (Igra.jezik == Jezik.ANG) {
+      if (igra.jezik == Jezik.ANG) {
     	  bJezik = new JButton("CHANGE LANGUAGE");
     	  bJezik.setPreferredSize(new Dimension(290, 40));
       }
@@ -108,11 +105,13 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       bJezik.addActionListener(new ActionListener() {
     	  public void actionPerformed(ActionEvent e) {
     		  if(e.getSource() == b) {
-    			  if (Igra.jezik == Jezik.ANG) {
+    			  if (igra.jezik == Jezik.ANG) {
     				  Igra novaIgra = new Igra(Jezik.SLO);
+    				  //TODO
     			  }
     			  else {
     				  Igra novaIgra = new Igra(Jezik.ANG);
+    				  //TODO
     			  }
     		  }
     	  }
@@ -121,7 +120,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       up.add(b, BorderLayout.LINE_START);
       up.add(bJezik, BorderLayout.CENTER);
       
-      if (Igra.jezik == Jezik.SLO) {
+      if (igra.jezik == Jezik.SLO) {
           BufferedImage myPicture = ImageIO.read(new File("slo_zastava.png"));
           BufferedImage myPicture_scale = scale(myPicture, 70, 40);
           JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
@@ -138,13 +137,13 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       bottom.setSize(new Dimension(1000, 100));
       
       JButton bInput;
-      if (Igra.jezik == Jezik.ANG) {
+      if (igra.jezik == Jezik.ANG) {
     	  bInput= new JButton("ENTER");
       }
       else {
     	  bInput= new JButton("VNESI");
       }
-      //getRootPane().setDefaultButton(bInput);
+      getRootPane().setDefaultButton(bInput);
       bInput.setPreferredSize(new Dimension(120, 40));
       bInput.setBackground(new Color(175, 170, 170));
       bInput.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
@@ -156,7 +155,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
     			String textL = textU.toLowerCase();
     			if (textL.length() > 5) {
     				input.setText("");
-    				if (Igra.jezik == Jezik.ANG) {
+    				if (igra.jezik == Jezik.ANG) {
     					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO LONG");
     				}
     				else {
@@ -165,7 +164,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
     			}
     			else if (textL.length() < 5) {
     				input.setText("");
-    				if (Igra.jezik == Jezik.ANG) {
+    				if (igra.jezik == Jezik.ANG) {
     					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO SHORT");
     				}
     				else {
@@ -175,7 +174,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
     			else {
     				if (!Igra.LST.contains(textL)) {
     					input.setText("");
-    					if (Igra.jezik == Jezik.ANG) {
+    					if (igra.jezik == Jezik.ANG) {
     						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY");
     					}
     					else {
@@ -414,6 +413,7 @@ class Platno extends JPanel {
 		   }
 		   if (barve_polja[i][0] != Polje.PRAZNO) {
 			   if (st_plosce == 1) {
+				   //TODO
 				   String moznostiStr = Integer.toString(steviloBesed.get(i));
 				   g.drawString(moznostiStr, x + 10, y + 50);
 			   }

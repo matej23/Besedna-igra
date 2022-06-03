@@ -37,7 +37,7 @@ public class Igra {
 	public static LinkedList<String> mozneBesede1;
 	public static LinkedList<String> mozneBesede2;
 	
-	public static Jezik jezik;
+	public Jezik jezik;
 	protected ColorTheme color;
 	protected Cas cas;
 	
@@ -212,7 +212,7 @@ public class Igra {
 				sivi += lst_poskus[i];
 			}
 		}
-		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-z]{5})";
+		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-zčšž]{5})";
 		else vzorec += "([a-z]{5})";
 		for (int i = 0; i < poskus.length(); ++i) {
 			String pomozni = "";
