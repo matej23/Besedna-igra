@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
+//import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
@@ -17,6 +17,7 @@ import logika.StanjeEnum;
 @SuppressWarnings("serial")
 class Platno extends JPanel {
 	int st_plosce;
+	private Color defaultColor;
 //	private StanjeEnum stanje;
 //	private Polje[][] barve_polja;
 //	private String[][] plosca_vrednosti;
@@ -26,6 +27,7 @@ class Platno extends JPanel {
 	  super();
       setPreferredSize(new Dimension(550, 550));
       this.st_plosce = st_plosce;
+      this.defaultColor = getBackground();
 
 //      if (st_plosce == 1) {
 //    	 stanje = Okno.igra.stanje.plosca1;
@@ -51,19 +53,19 @@ class Platno extends JPanel {
 	   StanjeEnum stanje;
 	   Polje[][] barve_polja;
 	   String[][] plosca_vrednosti;
-	   LinkedList<Integer> steviloBesed;
+//	   LinkedList<Integer> steviloBesed;
 	   
 	   if (st_plosce == 1) {
 		   stanje = Okno.igra.stanje.plosca1;
 		   barve_polja = Okno.igra.plosca1_barve;
 		   plosca_vrednosti = Okno.igra.plosca1_vrednosti;
-		   steviloBesed = Okno.igra.steviloBesed1;
+//		   steviloBesed = Okno.igra.steviloBesed1;
 	      }
 	  else {
 		  stanje = Okno.igra.stanje.plosca2;
 		  barve_polja = Okno.igra.plosca2_barve;
 		  plosca_vrednosti = Okno.igra.plosca2_vrednosti;
-		  steviloBesed = Okno.igra.steviloBesed2;
+//		  steviloBesed = Okno.igra.steviloBesed2;
 	      }
 	   
 	   if (stanje == StanjeEnum.PORAZ) {
@@ -72,6 +74,8 @@ class Platno extends JPanel {
 	   else if(stanje == StanjeEnum.ZMAGA) {
 		   setBackground(new Color(150, 255, 150));
 	   }
+	   else setBackground(defaultColor);
+	   
 	   Color prazno = new Color(210, 210, 210); 
 	   Color napacno = new Color(175, 170, 170);
 	   Color pravilno = new Color(0,204,0);
