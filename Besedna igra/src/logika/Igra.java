@@ -19,20 +19,20 @@ public class Igra {
 	
 	public static LinkedList<String> LST; 
 	
-	public static String[][] plosca1_vrednosti;
-	public static String[][] plosca2_vrednosti;
-	public static Polje[][] plosca1_barve;
-	public static Polje[][] plosca2_barve;
+	public String[][] plosca1_vrednosti;
+	public String[][] plosca2_vrednosti;
+	public Polje[][] plosca1_barve;
+	public Polje[][] plosca2_barve;
 	
-	public static Stanje stanje;
+	public Stanje stanje;
 	
-	public static String beseda1;
-	public static String beseda2;
+	public String beseda1;
+	public String beseda2;
 	
-	public static BarveCrke barveCrke;
+	public BarveCrke barveCrke;
 	
-	public static LinkedList<Integer> steviloBesed1;
-	public static LinkedList<Integer> steviloBesed2;
+	public LinkedList<Integer> steviloBesed1;
+	public LinkedList<Integer> steviloBesed2;
 	
 	public static LinkedList<String> mozneBesede1;
 	public static LinkedList<String> mozneBesede2;
@@ -143,7 +143,7 @@ public class Igra {
 	// funkcija, ki updejta vse stiri plosce glede na novo besedo 
 	// (preveri, ali sta obe plosci v teku)
 	
-	public static void odigraj(String poskus) {
+	public void odigraj(String poskus) {
 		String[] lst_poskus = poskus.split("");
 		if ((stanje.plosca1 == StanjeEnum.V_TEKU) && (stanje.plosca2 == StanjeEnum.V_TEKU)){
 			int vrstica = 0;
@@ -196,22 +196,28 @@ public class Igra {
 		Map<Integer, Polje> slovar = barvaZaVrednost(geslo, poskus);
 		String[] lst_poskus = poskus.split("");
 		String zeleni = "";
-		String sivi = "";
 		String rumeni = "";
 		String vzorec = "";
+		LinkedList<String> zeleniSez = new LinkedList<String>();
+		LinkedList<String> siviSez = new LinkedList<String>();
+		LinkedList<String> rumeniSez = new LinkedList<String>();
 		for (int i = 0; i < poskus.length(); ++i) {
 			if (slovar.get(i) == Polje.PRAVILNO) {
 				zeleni += lst_poskus[i];
+				zeleniSez.add(lst_poskus[i]);
 			}
 			else if (slovar.get(i) == Polje.DELNOPRAVILNO) {
 				zeleni += ".";
 				rumeni += "(?=.*"+lst_poskus[i]+".*)";
+				rumeniSez.add(lst_poskus[i]);
 			}
 			else {
 				zeleni += ".";
-				sivi += lst_poskus[i];
+				siviSez.add(lst_poskus[i]);
 			}
 		}
+		siviSez = precisciSivi(siviSez, zeleniSez);
+		String sivi = pretvoriVNiz (precisciSivi(siviSez, rumeniSez));
 		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-zčšž]{5})";
 		else vzorec += "([a-zčšž]{5})";
 		for (int i = 0; i < poskus.length(); ++i) {
@@ -230,9 +236,23 @@ public class Igra {
 		return Pattern.matches(vzorec, element) && Pattern.matches(zeleni, element);
 	}
 	
+	public static LinkedList<String> precisciSivi (LinkedList<String> sivi, LinkedList<String> rumeni) {
+		LinkedList<String> preciscen = new LinkedList<String>();
+		for (String niz : sivi) {
+			if (!rumeni.contains(niz)) {
+				preciscen.add(niz);
+			}
+		}
+		return preciscen;
+	}
+	
+	public static String pretvoriVNiz(LinkedList<String> seznam) {
+		return String.join("", seznam);
+	}
+	
 	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
 	
-	public static int steviloMoznih(String poskus, int steviloPlosca) {
+	public int steviloMoznih(String poskus, int steviloPlosca) {
 		if (steviloPlosca == 1) {
 			for (String element : LST) {
 				if (!seUjema(element, poskus, beseda1)) {
@@ -251,7 +271,7 @@ public class Igra {
 		}
 	}
 
-	public static void posodobi(String poteza) {
+	public void posodobi(String poteza) {
 		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
 			int i1 = 0;
 			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
@@ -298,7 +318,7 @@ public class Igra {
 		}
 	}
 	
-	public static void posodobiCrke(HashMap<String, Polje> barve, int plosca) {
+	public void posodobiCrke(HashMap<String, Polje> barve, int plosca) {
 		String[][] plosca_vrednosti;
 		Polje[][] barve_vrednosti;
 		if (plosca == 1) {
@@ -325,7 +345,7 @@ public class Igra {
 			   }
 		}
 	}
-	public static void posodobi_in_odigraj(String poteza) {
+	public void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
 		posodobi(poteza);
 	}
@@ -342,7 +362,11 @@ public class Igra {
 		}
 	}
 
-
+	public static Igra novaIgra (Jezik jezik) {
+		Igra igra = new Igra(jezik);
+		return igra;
+	}
+	
 }
 
 

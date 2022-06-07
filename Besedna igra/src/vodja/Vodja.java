@@ -34,7 +34,7 @@ public class Vodja {
 						System.out.println("VNESITE POSKUS:");
 						String poskus = p.readLine();
 						
-						if (!igra.LST.contains(poskus.trim())) {
+						if (!Igra.LST.contains(poskus.trim())) {
 							System.out.println("POSKUS NI VELJAVEN ");
 						}
 						else {
@@ -83,4 +83,6 @@ public class Vodja {
 			System.out.print("\n");
 		}
 	}
+	
+	
 }
