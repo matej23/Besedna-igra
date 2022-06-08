@@ -192,84 +192,84 @@ public class Igra {
 	}
 	
 	// pomozna funkcija za steviloMoznih 
-	public static boolean seUjema(String element, String poskus, String geslo) {
-		Map<Integer, Polje> slovar = barvaZaVrednost(geslo, poskus);
-		String[] lst_poskus = poskus.split("");
-		String zeleni = "";
-		String rumeni = "";
-		String vzorec = "";
-		LinkedList<String> zeleniSez = new LinkedList<String>();
-		LinkedList<String> siviSez = new LinkedList<String>();
-		LinkedList<String> rumeniSez = new LinkedList<String>();
-		for (int i = 0; i < poskus.length(); ++i) {
-			if (slovar.get(i) == Polje.PRAVILNO) {
-				zeleni += lst_poskus[i];
-				zeleniSez.add(lst_poskus[i]);
-			}
-			else if (slovar.get(i) == Polje.DELNOPRAVILNO) {
-				zeleni += ".";
-				rumeni += "(?=.*"+lst_poskus[i]+".*)";
-				rumeniSez.add(lst_poskus[i]);
-			}
-			else {
-				zeleni += ".";
-				siviSez.add(lst_poskus[i]);
-			}
-		}
-		siviSez = precisciSivi(siviSez, zeleniSez);
-		String sivi = pretvoriVNiz (precisciSivi(siviSez, rumeniSez));
-		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-zčšž]{5})";
-		else vzorec += "([a-zčšž]{5})";
-		for (int i = 0; i < poskus.length(); ++i) {
-			String pomozni = "";
-			if (!sivi.equals("")) {
-				pomozni += "[^" + sivi;
-				if (slovar.get(i) == Polje.DELNOPRAVILNO) {
-				pomozni += lst_poskus[i];
-				}
-				pomozni += "]";
-			}
-			vzorec += pomozni;
-		}
-		vzorec += "$";
-
-		return Pattern.matches(vzorec, element) && Pattern.matches(zeleni, element);
-	}
-	
-	public static LinkedList<String> precisciSivi (LinkedList<String> sivi, LinkedList<String> rumeni) {
-		LinkedList<String> preciscen = new LinkedList<String>();
-		for (String niz : sivi) {
-			if (!rumeni.contains(niz)) {
-				preciscen.add(niz);
-			}
-		}
-		return preciscen;
-	}
-	
-	public static String pretvoriVNiz(LinkedList<String> seznam) {
-		return String.join("", seznam);
-	}
-	
-	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
-	
-	public int steviloMoznih(String poskus, int steviloPlosca) {
-		if (steviloPlosca == 1) {
-			for (String element : LST) {
-				if (!seUjema(element, poskus, beseda1)) {
-					mozneBesede1.remove(element);
-				}
-			}
-			return mozneBesede1.size();
-		}
-		else {
-			for (String element : LST) {
-				if (!seUjema(element, poskus, beseda2)) {
-					mozneBesede2.remove(element);
-				}
-			}
-			return mozneBesede2.size();
-		}
-	}
+//	public static boolean seUjema(String element, String poskus, String geslo) {
+//		Map<Integer, Polje> slovar = barvaZaVrednost(geslo, poskus);
+//		String[] lst_poskus = poskus.split("");
+//		String zeleni = "";
+//		String rumeni = "";
+//		String vzorec = "";
+//		LinkedList<String> zeleniSez = new LinkedList<String>();
+//		LinkedList<String> siviSez = new LinkedList<String>();
+//		LinkedList<String> rumeniSez = new LinkedList<String>();
+//		for (int i = 0; i < poskus.length(); ++i) {
+//			if (slovar.get(i) == Polje.PRAVILNO) {
+//				zeleni += lst_poskus[i];
+//				zeleniSez.add(lst_poskus[i]);
+//			}
+//			else if (slovar.get(i) == Polje.DELNOPRAVILNO) {
+//				zeleni += ".";
+//				rumeni += "(?=.*"+lst_poskus[i]+".*)";
+//				rumeniSez.add(lst_poskus[i]);
+//			}
+//			else {
+//				zeleni += ".";
+//				siviSez.add(lst_poskus[i]);
+//			}
+//		}
+//		siviSez = precisciSivi(siviSez, zeleniSez);
+//		String sivi = pretvoriVNiz (precisciSivi(siviSez, rumeniSez));
+//		if ((!rumeni.equals("")) || (!sivi.equals(""))) vzorec += rumeni + "(?=[a-zčšž]{5})";
+//		else vzorec += "([a-zčšž]{5})";
+//		for (int i = 0; i < poskus.length(); ++i) {
+//			String pomozni = "";
+//			if (!sivi.equals("")) {
+//				pomozni += "[^" + sivi;
+//				if (slovar.get(i) == Polje.DELNOPRAVILNO) {
+//				pomozni += lst_poskus[i];
+//				}
+//				pomozni += "]";
+//			}
+//			vzorec += pomozni;
+//		}
+//		vzorec += "$";
+//
+//		return Pattern.matches(vzorec, element) && Pattern.matches(zeleni, element);
+//	}
+//	
+//	public static LinkedList<String> precisciSivi (LinkedList<String> sivi, LinkedList<String> rumeni) {
+//		LinkedList<String> preciscen = new LinkedList<String>();
+//		for (String niz : sivi) {
+//			if (!rumeni.contains(niz)) {
+//				preciscen.add(niz);
+//			}
+//		}
+//		return preciscen;
+//	}
+//	
+//	public static String pretvoriVNiz(LinkedList<String> seznam) {
+//		return String.join("", seznam);
+//	}
+//	
+//	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
+//	
+//	public int steviloMoznih(String poskus, int steviloPlosca) {
+//		if (steviloPlosca == 1) {
+//			for (String element : LST) {
+//				if (!seUjema(element, poskus, beseda1)) {
+//					mozneBesede1.remove(element);
+//				}
+//			}
+//			return mozneBesede1.size();
+//		}
+//		else {
+//			for (String element : LST) {
+//				if (!seUjema(element, poskus, beseda2)) {
+//					mozneBesede2.remove(element);
+//				}
+//			}
+//			return mozneBesede2.size();
+//		}
+//	}
 
 	public void posodobi(String poteza) {
 		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
@@ -302,8 +302,8 @@ public class Igra {
 					stanje.plosca1 = StanjeEnum.PORAZ;
 					}	
 			}
-			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
-			steviloBesed1.addLast(steviloMoznih(poteza, 1));
+//			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+//			steviloBesed1.addLast(steviloMoznih(poteza, 1));
 //			posodobiCrke(barveCrke.barve1, 1);
 		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
@@ -337,8 +337,8 @@ public class Igra {
 					stanje.plosca2 = StanjeEnum.PORAZ;
 					}
 			}
-			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
-			steviloBesed2.addLast(steviloMoznih(poteza,2));
+//			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
+//			steviloBesed2.addLast(steviloMoznih(poteza,2));
 //			posodobiCrke(barveCrke.barve2, 2);
 		}
 		}

@@ -124,14 +124,14 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
         jep.addHyperlinkListener(new HyperlinkListener() {
           public void hyperlinkUpdate(HyperlinkEvent hle) {
             if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
-              if (hle.getDescription().equalsIgnoreCase(url + beseda1)) {
+              if (hle.getDescription().equalsIgnoreCase(url+beseda1)) {
   				try {
   					Desktop.getDesktop().browse(hle.getURL().toURI());
   				} catch (IOException | URISyntaxException e) {
   					e.printStackTrace();
   				}
               }
-              if (hle.getDescription().equalsIgnoreCase(url + beseda2)) {
+              else if (hle.getDescription().equalsIgnoreCase(url+beseda2)) {
               	try {
               		Desktop.getDesktop().browse(hle.getURL().toURI());
   				} catch (IOException | URISyntaxException e) {
