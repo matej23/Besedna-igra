@@ -22,7 +22,7 @@ class Crke extends JPanel{
 //	String geslo2;
 //	Jezik jezik;
 //	String[] crkeIzpis;
-//	int crkeVrstica;
+	int crkeVrstica;
 	
 //	BarveCrke barveCrke;
 	
@@ -32,14 +32,14 @@ class Crke extends JPanel{
 //		geslo1 = igra.beseda1;
 //		geslo2 = igra.beseda2;
 		
-//		if (igra.jezik == Jezik.ANG) {
+		if (igra.jezik == Jezik.ANG) {
 //			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-//			crkeVrstica = 4;
-//		}
-//		else {
+			crkeVrstica = 4;
+		}
+		else {
 //			crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
-//			crkeVrstica = 5;
-//		}
+			crkeVrstica = 5;
+		}
 	}
 	
 	public void paint(Graphics g) {

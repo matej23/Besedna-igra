@@ -2,32 +2,32 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-//import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-//import java.awt.image.BufferedImage;
-//import java.io.File;
 import java.io.IOException;
-
-//import javax.imageio.ImageIO;
+import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-//import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import logika.Igra;
 import logika.Jezik;
+import logika.StanjeEnum;
 
 @SuppressWarnings("serial")
-class Okno extends JFrame implements ActionListener, KeyListener{
+public class Okno extends JFrame implements ActionListener, KeyListener{
 
    private Platno platno1;
    private Platno platno2;
@@ -37,6 +37,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
    protected static JButton gumbSpremeniJezik;
    protected static JButton gumbVnos;
    protected static JTextField vnos;
+   protected JEditorPane jep;
   
 
    public Okno() throws IOException {
@@ -63,7 +64,7 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       gumbNovaIgra.setPreferredSize(new Dimension(180, 40));
       gumbNovaIgra.setBackground(new Color(175, 170, 170));
       gumbNovaIgra.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
-      gumbNovaIgra.setForeground(Color.BLUE);
+      gumbNovaIgra.setForeground(Color.BLACK);
       gumbNovaIgra.addActionListener(this);
 
       gumbSpremeniJezik = new JButton("SPREMENI JEZIK", pomanjsanaIkona("slo_zastava.png"));
@@ -71,26 +72,17 @@ class Okno extends JFrame implements ActionListener, KeyListener{
 
       gumbSpremeniJezik.setBackground(new Color(175, 170, 170));
       gumbSpremeniJezik.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
-      gumbSpremeniJezik.setForeground(Color.BLUE);
+      gumbSpremeniJezik.setForeground(Color.BLACK);
       gumbSpremeniJezik.addActionListener(this);
   
       up.add(gumbNovaIgra, BorderLayout.LINE_START);
       up.add(gumbSpremeniJezik, BorderLayout.CENTER);
       
-      
-//      if (igra.jezik == Jezik.SLO) {
-//          BufferedImage myPicture = ImageIO.read(new File("slo_zastava.png"));
-//          BufferedImage myPicture_scale = scale(myPicture, 70, 40);
-//          JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
-//         
-//          up.add(picture);
-//      }
-//      else {
-//          BufferedImage myPicture = ImageIO.read(new File("ang_zastava.png"));
-//          BufferedImage myPicture_scale = scale(myPicture, 70, 40);
-//          JLabel picture = new JLabel(new ImageIcon(myPicture_scale));
-//          up.add(picture);
-//      }
+      jep = new JEditorPane();
+      jep.setContentType("text/html");
+      jep.setEditable(false);
+      jep.setOpaque(false);
+
       JPanel bottom = new JPanel();
       bottom.setSize(new Dimension(1000, 100));
     
@@ -100,12 +92,12 @@ class Okno extends JFrame implements ActionListener, KeyListener{
       gumbVnos.setPreferredSize(new Dimension(120, 40));
       gumbVnos.setBackground(new Color(175, 170, 170));
       gumbVnos.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
-      gumbVnos.setForeground(Color.BLUE);
+      gumbVnos.setForeground(Color.BLACK);
       gumbVnos.addActionListener(this);
     	  
       bottom.add(vnos);
       bottom.add(gumbVnos);
-      
+
       add(platno1, BorderLayout.LINE_START);
       add(platno2, BorderLayout.CENTER);
       add(crke, BorderLayout.LINE_END);
@@ -117,16 +109,6 @@ class Okno extends JFrame implements ActionListener, KeyListener{
    }
    
 	
-//   public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
-//       BufferedImage scaledImage = null;
-//       if (imageToScale != null) {
-//           scaledImage = new BufferedImage(dWidth, dHeight, imageToScale.getType());
-//           Graphics2D graphics2D = scaledImage.createGraphics();
-//           graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
-//           graphics2D.dispose();
-//       }
-//       return scaledImage;
-//   }
    
    	public ImageIcon pomanjsanaIkona(String niz) {
    		ImageIcon imageIcon = new ImageIcon(niz);
@@ -135,7 +117,56 @@ class Okno extends JFrame implements ActionListener, KeyListener{
         imageIcon = new ImageIcon(newimg);
         return imageIcon;
    	}
-
+   	
+   	public void dodajUrl(String beseda1, String beseda2, JEditorPane jep, String url, String besedilo) {
+   		jep.setText(besedilo);
+        
+        jep.addHyperlinkListener(new HyperlinkListener() {
+          public void hyperlinkUpdate(HyperlinkEvent hle) {
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
+              if (hle.getDescription().equalsIgnoreCase(url + beseda1)) {
+  				try {
+  					Desktop.getDesktop().browse(hle.getURL().toURI());
+  				} catch (IOException | URISyntaxException e) {
+  					e.printStackTrace();
+  				}
+              }
+              if (hle.getDescription().equalsIgnoreCase(url + beseda2)) {
+              	try {
+              		Desktop.getDesktop().browse(hle.getURL().toURI());
+  				} catch (IOException | URISyntaxException e) {
+  					e.printStackTrace();
+  				}
+              }
+            }
+          }
+        });
+   	}
+   	
+   	public void izpisiSporocilo(Jezik jezik, StanjeEnum stanje) {
+   		if (stanje == StanjeEnum.ZMAGA) {
+   			if (jezik == Jezik.ANG) {
+   				JOptionPane.showMessageDialog(platno2, "CONGRATULATIONS!");
+   			}
+   			else JOptionPane.showMessageDialog(platno2, "BRAVO!");
+   		}
+   		else {
+   			if (jezik == Jezik.ANG) {
+   				String url = "https://www.merriam-webster.com/dictionary/";
+   				String tekst = ":( The correct solution is <a href='"+url+igra.beseda1+"'>"+igra.beseda1+"</a> and <a href='"+url+igra.beseda2+"'>"+igra.beseda2+"</a>.";
+   			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
+   				JOptionPane.showMessageDialog(platno2, jep);
+   			}
+   			else {
+   				String url = "https://fran.si/iskanje?View=1&Query=";
+   				String tekst = ":( Iskani besedi sta <a href='"+url+igra.beseda1+"'>"+igra.beseda1+"</a> in <a href='"+url+igra.beseda2+"'>"+igra.beseda2+"</a>.";
+   			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
+   				JOptionPane.showMessageDialog(platno2, jep);
+   			}
+   				
+   		}
+   	}
+   	
 @Override
 public void actionPerformed(ActionEvent e) {
 	if ((e.getSource() == vnos) || (e.getSource() == gumbVnos)) {
@@ -161,7 +192,7 @@ public void actionPerformed(ActionEvent e) {
 			}
 			else {
 				if (!Igra.LST.contains(textL)) {
-					vnos.setText("");
+					;
 					if (igra.jezik == Jezik.ANG) {
 						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY");
 					}
@@ -172,8 +203,10 @@ public void actionPerformed(ActionEvent e) {
     			else {
         			igra.posodobi_in_odigraj(textL);
         			repaint();
-        			vnos.setText("");
+        			if (igra.stanje_celota() != StanjeEnum.V_TEKU) izpisiSporocilo(igra.jezik, igra.stanje_celota());
+        			
     			}
+				vnos.setText("");
 			}
 		}
 	else if (e.getSource() == gumbNovaIgra) {
@@ -220,6 +253,7 @@ public void keyTyped(KeyEvent e) {
 public void keyPressed(KeyEvent e) {
 }
 
+
+    
+
 }
-
-
