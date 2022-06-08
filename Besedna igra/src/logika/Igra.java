@@ -306,6 +306,7 @@ public class Igra {
 //			steviloBesed1.addLast(steviloMoznih(poteza, 1));
 //			posodobiCrke(barveCrke.barve1, 1);
 		}
+		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
 			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
@@ -340,7 +341,6 @@ public class Igra {
 //			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 //			steviloBesed2.addLast(steviloMoznih(poteza,2));
 //			posodobiCrke(barveCrke.barve2, 2);
-		}
 		}
 	}
 	
