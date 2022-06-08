@@ -156,8 +156,8 @@ public class Igra {
 			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
 				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
-				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
-				plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
+				plosca1_vrednosti[vrstica][i] = lst_poskus[i].toUpperCase();
+				plosca2_vrednosti[vrstica][i] = lst_poskus[i].toUpperCase();		
 			}
 		}
 		
@@ -170,7 +170,7 @@ public class Igra {
 			
 			for (int i = 0; i < plosca1_barve[0].length; i++ ) {
 				plosca1_barve[vrstica][i] = barve_vrednosti1.get(i);
-				plosca1_vrednosti[vrstica][i] = lst_poskus[i];
+				plosca1_vrednosti[vrstica][i] = lst_poskus[i].toUpperCase();
 			}
 		}
 		
@@ -183,7 +183,7 @@ public class Igra {
 			
 			for (int i = 0; i < plosca2_barve[0].length; i++ ) {
 				plosca2_barve[vrstica][i] = barve_vrednosti2.get(i);
-				plosca2_vrednosti[vrstica][i] = lst_poskus[i];		
+				plosca2_vrednosti[vrstica][i] = lst_poskus[i].toUpperCase();		
 			}
 		}
 		else {
@@ -282,7 +282,19 @@ public class Igra {
 				Polje[] test1 = new Polje[5];
 				for (int k1 = 0; k1 < test1.length; k1++) {
 					test1[k1] = Polje.PRAVILNO;
-				}
+					if (plosca1_barve[i1-1][k1] == Polje.PRAVILNO) {
+						barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.PRAVILNO);
+					}
+					else if (plosca1_barve[i1-1][k1] == Polje.NAPACNO) {
+						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
+							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.NAPACNO);
+						}
+					}
+					else if (plosca1_barve[i1-1][k1] == Polje.DELNOPRAVILNO) {
+						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
+							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.DELNOPRAVILNO);
+						}
+					}
 				if (Arrays.equals(test1, plosca1_barve[i1 - 1])) {
 					stanje.plosca1 = StanjeEnum.ZMAGA;
 					}
@@ -292,7 +304,7 @@ public class Igra {
 			}
 			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 			steviloBesed1.addLast(steviloMoznih(poteza, 1));
-			posodobiCrke(barveCrke.barve1, 1);
+//			posodobiCrke(barveCrke.barve1, 1);
 		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
@@ -304,6 +316,19 @@ public class Igra {
 				Polje[] test2 = new Polje[5];
 				for (int k2 = 0; k2 < test2.length; k2++) {
 					test2[k2] = Polje.PRAVILNO;
+					if (plosca2_barve[i2-1][k2] == Polje.PRAVILNO) {
+						barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.PRAVILNO);
+					}
+					else if (plosca2_barve[i2-1][k2] == Polje.NAPACNO) {
+						if (barveCrke.barve2.get(plosca1_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+							barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.NAPACNO);
+						}
+					}
+					else if (plosca1_barve[i2-1][k2] == Polje.DELNOPRAVILNO) {
+						if (barveCrke.barve2.get(plosca1_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+							barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.DELNOPRAVILNO);
+						}
+					}
 				}
 				if (Arrays.equals(test2, plosca2_barve[i2 - 1])) {
 					stanje.plosca2 = StanjeEnum.ZMAGA;
@@ -314,37 +339,11 @@ public class Igra {
 			}
 			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
 			steviloBesed2.addLast(steviloMoznih(poteza,2));
-			posodobiCrke(barveCrke.barve2, 2);
+//			posodobiCrke(barveCrke.barve2, 2);
+		}
 		}
 	}
 	
-	public void posodobiCrke(HashMap<String, Polje> barve, int plosca) {
-		String[][] plosca_vrednosti;
-		Polje[][] barve_vrednosti;
-		if (plosca == 1) {
-			plosca_vrednosti = plosca1_vrednosti;
-			barve_vrednosti = plosca1_barve;
-		}
-		else {
-			plosca_vrednosti = plosca2_vrednosti;
-			barve_vrednosti = plosca2_barve;
-		}
-		for (int i = 0; i < plosca_vrednosti.length; i++) {
-			   for (int j = 0; j < plosca_vrednosti[0].length; j++) {
-				   if (barve_vrednosti[i][j] == Polje.PRAVILNO) {
-					   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.PRAVILNO);
-				   }
-				   else if (barve_vrednosti[i][j] == Polje.NAPACNO) {
-					   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.NAPACNO);
-				   }
-				   else if (barve_vrednosti[i][j] == Polje.DELNOPRAVILNO) {
-					   if (barveCrke.barve1.get(plosca_vrednosti[i][j]) == Polje.PRAZNO) {
-						   barveCrke.barve1.put(plosca_vrednosti[i][j], Polje.DELNOPRAVILNO);
-					   }
-				   }
-			   }
-		}
-	}
 	public void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
 		posodobi(poteza);

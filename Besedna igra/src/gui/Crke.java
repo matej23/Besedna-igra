@@ -18,42 +18,32 @@ import logika.Polje;
 @SuppressWarnings("serial")
 class Crke extends JPanel{
 	
-//	String geslo1;
-//	String geslo2;
-//	Jezik jezik;
-//	String[] crkeIzpis;
-	int crkeVrstica;
-	
-//	BarveCrke barveCrke;
-	
+	public int crkeVrstica;
+
 	public Crke(Igra igra) {
+		super();
 		setPreferredSize(new Dimension(400, 400));
-//		barveCrke = igra.barveCrke;
-//		geslo1 = igra.beseda1;
-//		geslo2 = igra.beseda2;
-		
-		if (igra.jezik == Jezik.ANG) {
-//			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-			crkeVrstica = 4;
-		}
-		else {
-//			crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
-			crkeVrstica = 5;
-		}
+
+//		if (igra.jezik == Jezik.ANG) {
+//			crkeVrstica = 4;
+//		}
+//		else {
+//			crkeVrstica = 5;
+//		}
 	}
 	
-	public void paint(Graphics g) {
-		super.paint(g);
-	    draw(g);
-	}
+//	public void paint(Graphics g) {
+//		super.paint(g);
+//	    draw(g);
+//	}
 	
-	public void draw(Graphics g){
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
 		BarveCrke barveCrke = Okno.igra.barveCrke;
 		String geslo1 = Okno.igra.beseda1;
 		String geslo2 = Okno.igra.beseda2;
 		Jezik jezik = Okno.igra.jezik;
 		String[] crkeIzpis;
-		int crkeVrstica;
 		if (jezik == Jezik.ANG) {
 			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 			crkeVrstica = 4;
@@ -108,6 +98,8 @@ class Crke extends JPanel{
 		   centerString(g,rectangle3,geslo1.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 		   Rectangle rectangle4 = new Rectangle(x, y + 60, 100, 50);
 		   centerString(g,rectangle4,geslo2.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
+		   
+		   repaint();
 	}
 	
 	public void centerString(Graphics g, Rectangle r, String s, Font font) {

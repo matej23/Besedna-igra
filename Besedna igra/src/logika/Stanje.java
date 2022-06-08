@@ -5,9 +5,7 @@ public class Stanje {
 	public StanjeEnum plosca2;
 	public int stevilo_moznosti1;
 	public int stevilo_moznosti2;
-	//todo
-	//a narediva da bo stevilo besed ze v stanju ? + opis z besedami zgoraj 
-	//
+
 	public Stanje(int stevilo_moznosti) {
 		//stevilo moznosti je v resnici dolzina seznam, ki je dobljena na podlagi izbranega jezika
 		this.plosca1 = StanjeEnum.V_TEKU;

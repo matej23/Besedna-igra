@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class BarveCrke {
 	public HashMap<String, Polje> barve1;
-	public  HashMap<String, Polje> barve2;
+	public HashMap<String, Polje> barve2;
 	
 	public BarveCrke(Jezik jezik) {
 		barve1 = new HashMap<String, Polje>();
