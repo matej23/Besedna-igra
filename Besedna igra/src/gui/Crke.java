@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -14,6 +15,7 @@ import logika.BarveCrke;
 import logika.Igra;
 import logika.Jezik;
 import logika.Polje;
+import logika.StanjeEnum;
 
 @SuppressWarnings("serial")
 class Crke extends JPanel{
@@ -44,6 +46,10 @@ class Crke extends JPanel{
 		String geslo2 = Okno.igra.beseda2;
 		Jezik jezik = Okno.igra.jezik;
 		String[] crkeIzpis;
+		
+		Color crke1 = null;
+		Color crke2 = null;
+		
 		if (jezik == Jezik.ANG) {
 			crkeIzpis = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 			crkeVrstica = 4;
@@ -52,32 +58,20 @@ class Crke extends JPanel{
 			crkeIzpis = "ABCČDEFGHIJKLMNOPRSŠTUVZŽ".split("");
 			crkeVrstica = 5;
 		}
-		
-		   Color prazno = new Color(210, 210, 210); 
-		   Color napacno = new Color(175, 170, 170);
-		   Color pravilno = new Color(0,204,0);
-		   Color delno_pravilno = new Color(250,250,50);
 		   
 		   int x = 100;
 		   int y = 75;
 		   
 		   int m = crkeVrstica;
 		   for (String crka : crkeIzpis) {
-			   if (barveCrke.barve1.get(crka) == Polje.DELNOPRAVILNO) {
-				   g.setColor(delno_pravilno);
-			   }
-			   else if (barveCrke.barve1.get(crka) == Polje.PRAVILNO) {
-				   g.setColor(pravilno);
-			   }
-			   else if (barveCrke.barve1.get(crka) == Polje.NAPACNO) {
-				   g.setColor(napacno);
-			   }
-			   else {
-				   g.setColor(prazno);
-			   }
+			   crke1 = barvaZaCrko(barveCrke, crka, 1);
+			   crke2 = barvaZaCrko(barveCrke, crka, 2);
 			   
 			   if (m > 1) {
-				   g.fillRect(x, y, 45, 45);
+				   g.setColor(crke1);
+				   g.fillRect(x, y, 23, 45);
+				   g.setColor(crke2);
+				   g.fillRect(x+23, y, 22, 45);
 				   g.setColor(Color.BLACK); 
 				   Rectangle rectangle = new Rectangle(x, y, 45, 45);
 				   centerString(g, rectangle,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
@@ -85,7 +79,10 @@ class Crke extends JPanel{
 				   x += 50;
 			   }
 			   else {
-				   g.fillRect(x, y, 45, 45);
+				   g.setColor(crke1);
+				   g.fillRect(x, y, 23, 45);
+				   g.setColor(crke2);
+				   g.fillRect(x+23, y, 22, 45);
 				   g.setColor(Color.BLACK);
 				   Rectangle rectangle2 = new Rectangle(x, y, 45, 45);
 				   centerString(g,rectangle2,crka.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
@@ -100,6 +97,45 @@ class Crke extends JPanel{
 		   centerString(g,rectangle4,geslo2.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 		   
 		   repaint();
+	}
+	
+	public Color barvaZaCrko(BarveCrke barveCrke, String crka, int plosca) {
+		   Color prazno = new Color(210, 210, 210); 
+		   Color napacno = new Color(175, 170, 170);
+		   Color pravilno = new Color(0,204,0);
+		   Color delno_pravilno = new Color(250,250,50);
+		   
+		   HashMap<String, Polje> barve;
+		   StanjeEnum stanje;
+		   
+		   if (plosca == 1) {
+			   barve = barveCrke.barve1;
+			   stanje = Igra.stanje.plosca1;
+		   }
+		   else {
+			   barve = barveCrke.barve2;
+			   stanje = Igra.stanje.plosca2;
+		   }
+		   if (stanje == StanjeEnum.ZMAGA) {
+			   return new Color(150, 255, 150); 
+		   }
+		   else if (stanje == StanjeEnum.PORAZ) {
+			   return new Color(255, 150, 150);
+		   }
+		   else {
+			   if (barve.get(crka) == Polje.DELNOPRAVILNO) {
+				   return delno_pravilno;
+			   }
+			   else if (barve.get(crka) == Polje.PRAVILNO) {
+				   return pravilno;
+			   }
+			   else if (barve.get(crka) == Polje.NAPACNO) {
+				   return napacno;
+			   }
+			   else {
+				   return prazno;
+			   }
+		   }
 	}
 	
 	public void centerString(Graphics g, Rectangle r, String s, Font font) {

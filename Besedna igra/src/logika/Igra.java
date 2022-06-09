@@ -24,7 +24,7 @@ public class Igra {
 	public Polje[][] plosca1_barve;
 	public Polje[][] plosca2_barve;
 	
-	public Stanje stanje;
+	public static Stanje stanje;
 	
 	public String beseda1;
 	public String beseda2;
@@ -270,7 +270,6 @@ public class Igra {
 //			return mozneBesede2.size();
 //		}
 //	}
-
 	public void posodobi(String poteza) {
 		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
 			int i1 = 0;
@@ -307,6 +306,16 @@ public class Igra {
 //			posodobiCrke(barveCrke.barve1, 1);
 		}
 		}
+//		else if (stanje.plosca1 == StanjeEnum.ZMAGA) {
+//			for (String crka : barveCrke.barve1.keySet()) {
+//				barveCrke.barve1.put(crka, Polje.ZMAGA);
+//			}
+//		}
+//		else {
+//			for (String crka : barveCrke.barve1.keySet()) {
+//				barveCrke.barve1.put(crka, Polje.PORAZ);
+//			}
+//		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
 			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
@@ -318,31 +327,31 @@ public class Igra {
 				for (int k2 = 0; k2 < test2.length; k2++) {
 					test2[k2] = Polje.PRAVILNO;
 					if (plosca2_barve[i2-1][k2] == Polje.PRAVILNO) {
-						barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.PRAVILNO);
+						barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.PRAVILNO);
 					}
 					else if (plosca2_barve[i2-1][k2] == Polje.NAPACNO) {
-						if (barveCrke.barve2.get(plosca1_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
-							barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.NAPACNO);
+						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.NAPACNO);
 						}
 					}
-					else if (plosca1_barve[i2-1][k2] == Polje.DELNOPRAVILNO) {
-						if (barveCrke.barve2.get(plosca1_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
-							barveCrke.barve2.put(plosca1_vrednosti[i2-1][k2], Polje.DELNOPRAVILNO);
+					else if (plosca2_barve[i2-1][k2] == Polje.DELNOPRAVILNO) {
+						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.DELNOPRAVILNO);
 						}
 					}
-				}
 				if (Arrays.equals(test2, plosca2_barve[i2 - 1])) {
 					stanje.plosca2 = StanjeEnum.ZMAGA;
-				}
+					}
 				else if (i2 == 6) {
 					stanje.plosca2 = StanjeEnum.PORAZ;
-					}
+					}	
 			}
-//			stanje.stevilo_moznosti2 = steviloMoznih(poteza, 2);
-//			steviloBesed2.addLast(steviloMoznih(poteza,2));
-//			posodobiCrke(barveCrke.barve2, 2);
+//			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+//			steviloBesed1.addLast(steviloMoznih(poteza, 1));
+//			posodobiCrke(barveCrke.barve1, 1);
 		}
-	}
+		}
+		}
 	
 	public void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);

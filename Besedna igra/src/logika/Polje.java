@@ -1,6 +1,6 @@
 package logika;
 
 public enum Polje {
-	PRAZNO, PRAVILNO, DELNOPRAVILNO, NAPACNO,
+	PRAZNO, PRAVILNO, DELNOPRAVILNO, NAPACNO
 
 }

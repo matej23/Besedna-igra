@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -11,7 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -19,8 +22,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.ColorUIResource;
 
 import logika.Igra;
 import logika.Jezik;
@@ -80,6 +85,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       
       jep = new JEditorPane();
       jep.setContentType("text/html");
+      jep.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
       jep.setEditable(false);
       jep.setOpaque(false);
 
@@ -143,25 +149,45 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
         });
    	}
    	
-   	public void izpisiSporocilo(Jezik jezik, StanjeEnum stanje) {
+   	public void izpisiSporocilo(Jezik jezik, StanjeEnum stanje) throws MalformedURLException {
    		if (stanje == StanjeEnum.ZMAGA) {
+ 			UIManager.put("OptionPane.background",new ColorUIResource(204, 255, 204));
+   			UIManager.put("Panel.background",new ColorUIResource(204, 255, 204));
+   			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 20));
+   			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
+   			
+     		ImageIcon imageIcon = new ImageIcon("congrats.png");
+            Image image = imageIcon.getImage(); 
+            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);   
+            imageIcon = new ImageIcon(newimg);
+            
    			if (jezik == Jezik.ANG) {
-   				JOptionPane.showMessageDialog(platno2, "CONGRATULATIONS!");
+   				JOptionPane.showMessageDialog(platno2, "CONGRATULATIONS!", "YOU WON !", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
-   			else JOptionPane.showMessageDialog(platno2, "BRAVO!");
+   			else {
+   				JOptionPane.showMessageDialog(platno2, "BRAVO!", "ZMAGALI STE !", JOptionPane.WARNING_MESSAGE, imageIcon);
+   			}
    		}
    		else {
+			UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+			UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+   			
+     		ImageIcon imageIcon = new ImageIcon("dict.png");
+            Image image = imageIcon.getImage(); 
+            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);   
+            imageIcon = new ImageIcon(newimg);
+
    			if (jezik == Jezik.ANG) {
    				String url = "https://www.merriam-webster.com/dictionary/";
-   				String tekst = ":( The correct solution is <a href='"+url+igra.beseda1+"'>"+igra.beseda1+"</a> and <a href='"+url+igra.beseda2+"'>"+igra.beseda2+"</a>.";
+   				String tekst = "THE CORRECT SOLUTION IS <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> AND <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(platno2, jep);
+   				JOptionPane.showMessageDialog(platno2, jep, "YOU LOST :(", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
    			else {
    				String url = "https://fran.si/iskanje?View=1&Query=";
-   				String tekst = ":( Iskani besedi sta <a href='"+url+igra.beseda1+"'>"+igra.beseda1+"</a> in <a href='"+url+igra.beseda2+"'>"+igra.beseda2+"</a>.";
+   				String tekst = " ISKANI BESEDI STA <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> IN <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(platno2, jep);
+   				JOptionPane.showMessageDialog(platno2, jep, "IZGUBILI STE :(", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
    				
    		}
@@ -170,40 +196,60 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 @Override
 public void actionPerformed(ActionEvent e) {
 	if ((e.getSource() == vnos) || (e.getSource() == gumbVnos)) {
+		 
 			String textU = vnos.getText();
 			String textL = textU.toLowerCase();
 			if (textL.length() > 5) {
+				UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+				UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+		   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
+		   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
+		   		
 				vnos.setText("");
 				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO LONG");
+					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO LONG", textU, JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREDOLGA");
+					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREDOLGA", textU, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else if (textL.length() < 5) {
+				UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+				UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+		   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
+		   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
+		   		
 				vnos.setText("");
 				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO SHORT");
+					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO SHORT", textU, JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREKRATKA");
+					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREKRATKA", textU, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else {
 				if (!Igra.LST.contains(textL)) {
-					;
+					UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+					UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+				   	UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
+				   	UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
+				   	
 					if (igra.jezik == Jezik.ANG) {
-						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY");
+						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY",textU, JOptionPane.WARNING_MESSAGE);
 					}
 					else {
-						JOptionPane.showMessageDialog(platno2, "VNEŠENE BESEDE NI V SLOVARJU");
+						JOptionPane.showMessageDialog(platno2, "VNEŠENE BESEDE NI V SLOVARJU",textU, JOptionPane.WARNING_MESSAGE);
 					}
 				}
     			else {
         			igra.posodobi_in_odigraj(textL);
         			repaint();
-        			if (igra.stanje_celota() != StanjeEnum.V_TEKU) izpisiSporocilo(igra.jezik, igra.stanje_celota());
+        			if (igra.stanje_celota() != StanjeEnum.V_TEKU)
+						try {
+							izpisiSporocilo(igra.jezik, igra.stanje_celota());
+						} catch (MalformedURLException e1) {
+							e1.printStackTrace();
+						}
         			
     			}
 				vnos.setText("");

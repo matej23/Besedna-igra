@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 
+import logika.Igra;
 import logika.Polje;
 import logika.StanjeEnum;
 
@@ -56,13 +57,13 @@ class Platno extends JPanel {
 //	   LinkedList<Integer> steviloBesed;
 	   
 	   if (st_plosce == 1) {
-		   stanje = Okno.igra.stanje.plosca1;
+		   stanje = Igra.stanje.plosca1;
 		   barve_polja = Okno.igra.plosca1_barve;
 		   plosca_vrednosti = Okno.igra.plosca1_vrednosti;
 //		   steviloBesed = Okno.igra.steviloBesed1;
 	      }
 	  else {
-		  stanje = Okno.igra.stanje.plosca2;
+		  stanje = Igra.stanje.plosca2;
 		  barve_polja = Okno.igra.plosca2_barve;
 		  plosca_vrednosti = Okno.igra.plosca2_vrednosti;
 //		  steviloBesed = Okno.igra.steviloBesed2;
