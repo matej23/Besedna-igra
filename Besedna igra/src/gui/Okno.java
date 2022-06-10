@@ -26,6 +26,7 @@ import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.TextUI;
 
 import logika.Igra;
 import logika.Jezik;
@@ -41,6 +42,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
    protected static JButton gumbNovaIgra;
    protected static JButton gumbSpremeniJezik;
    protected static JButton gumbVnos;
+   protected static JButton izhod;
    protected static JTextField vnos;
    protected JEditorPane jep;
   
@@ -64,6 +66,21 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       vnos.setFont(new Font("TimesRoman", Font.BOLD, 25));
       vnos.setHorizontalAlignment(JTextField.CENTER);
       
+      izhod = new JButton("IZHOD");
+      
+      izhod.setPreferredSize(new Dimension(150, 40));
+      izhod.setBackground(new Color(175, 170, 170));
+      izhod.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+      
+      ImageIcon izhodIcon = new ImageIcon("izhod.png");
+      Image image = izhodIcon.getImage(); 
+      Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);   
+      izhodIcon = new ImageIcon(newimg);
+      
+      izhod.setIcon(izhodIcon);
+      izhod.setForeground(Color.BLACK);
+      izhod.addActionListener(this);
+      
       gumbNovaIgra = new JButton("NOVA IGRA");
       
       gumbNovaIgra.setPreferredSize(new Dimension(180, 40));
@@ -82,10 +99,10 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
   
       up.add(gumbNovaIgra, BorderLayout.LINE_START);
       up.add(gumbSpremeniJezik, BorderLayout.CENTER);
-      
+      up.add(izhod, BorderLayout.LINE_END);
+ 
       jep = new JEditorPane();
       jep.setContentType("text/html");
-      jep.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
       jep.setEditable(false);
       jep.setOpaque(false);
 
@@ -100,7 +117,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       gumbVnos.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
       gumbVnos.setForeground(Color.BLACK);
       gumbVnos.addActionListener(this);
-    	  
+    
       bottom.add(vnos);
       bottom.add(gumbVnos);
 
@@ -110,7 +127,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       add(bottom, BorderLayout.AFTER_LAST_LINE);
       add(up, BorderLayout.PAGE_START);
       rootPane.setDefaultButton(gumbVnos);
-        
+      
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
    
@@ -153,41 +170,50 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
    		if (stanje == StanjeEnum.ZMAGA) {
  			UIManager.put("OptionPane.background",new ColorUIResource(204, 255, 204));
    			UIManager.put("Panel.background",new ColorUIResource(204, 255, 204));
-   			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 20));
-   			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
+   			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 35));
+   			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 20));
+   			UIManager.put("OptionPane.minimumSize",new Dimension(400,200)); 
+   			UIManager.put("Button.background", Color.WHITE);
    			
      		ImageIcon imageIcon = new ImageIcon("congrats.png");
             Image image = imageIcon.getImage(); 
-            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);   
+            Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);   
             imageIcon = new ImageIcon(newimg);
             
    			if (jezik == Jezik.ANG) {
-   				JOptionPane.showMessageDialog(platno2, "CONGRATULATIONS!", "YOU WON !", JOptionPane.WARNING_MESSAGE, imageIcon);
+   	   	    	JButton jbtNewGame = new JButton("NEW GAME");
+   	   	    	jbtNewGame.addActionListener(this);
+   	   	    	JButton jbtExit = new JButton("EXIT");
+   	   	    	jbtExit.addActionListener(this);
+   				Object[] options = {"OK", jbtNewGame, jbtExit};
+   				int result = JOptionPane.showOptionDialog(null, "CONGRATULATIONS!", "YOU WON !", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, null);
    			}
    			else {
-   				JOptionPane.showMessageDialog(platno2, "BRAVO!", "ZMAGALI STE !", JOptionPane.WARNING_MESSAGE, imageIcon);
+   				JOptionPane.showMessageDialog(null, "BRAVO!", "ZMAGALI STE !", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
    		}
    		else {
 			UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
 			UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+   			UIManager.put("OptionPane.minimumSize",new Dimension(400,200));
+   			UIManager.put("Button.background", Color.WHITE);
    			
      		ImageIcon imageIcon = new ImageIcon("dict.png");
             Image image = imageIcon.getImage(); 
-            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);   
+            Image newimg = image.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);   
             imageIcon = new ImageIcon(newimg);
 
    			if (jezik == Jezik.ANG) {
    				String url = "https://www.merriam-webster.com/dictionary/";
    				String tekst = "THE CORRECT SOLUTION IS <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> AND <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(platno2, jep, "YOU LOST :(", JOptionPane.WARNING_MESSAGE, imageIcon);
+   				JOptionPane.showMessageDialog(null, jep, "YOU LOST :(", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
    			else {
    				String url = "https://fran.si/iskanje?View=1&Query=";
    				String tekst = " ISKANI BESEDI STA <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> IN <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(platno2, jep, "IZGUBILI STE :(", JOptionPane.WARNING_MESSAGE, imageIcon);
+   				JOptionPane.showMessageDialog(null, jep, "IZGUBILI STE :(", JOptionPane.WARNING_MESSAGE, imageIcon);
    			}
    				
    		}
@@ -196,49 +222,50 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 @Override
 public void actionPerformed(ActionEvent e) {
 	if ((e.getSource() == vnos) || (e.getSource() == gumbVnos)) {
-		 
-			String textU = vnos.getText();
-			String textL = textU.toLowerCase();
+		
+ 		ImageIcon napakaIcon = new ImageIcon("napaka.png");
+        Image image = napakaIcon.getImage(); 
+        Image newimg = image.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);   
+        napakaIcon = new ImageIcon(newimg);
+        
+		UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+		UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 20));
+   		UIManager.put("OptionPane.minimumSize",new Dimension(400,200));
+		UIManager.put("Button.background", Color.WHITE);
+		
+		String textU = vnos.getText();
+		String textL = textU.toLowerCase();
+			
 			if (textL.length() > 5) {
-				UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
-				UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
-		   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
-		   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
 		   		
 				vnos.setText("");
 				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO LONG", textU, JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO LONG", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 				}
 				else {
-					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREDOLGA", textU, JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREDOLGA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 				}
 			}
 			else if (textL.length() < 5) {
-				UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
-				UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
-		   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
-		   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
 		   		
 				vnos.setText("");
 				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS TOO SHORT", textU, JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO SHORT", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 				}
 				else {
-					JOptionPane.showMessageDialog(platno2, "BESEDA, KI STE JO VNESLI, JE PREKRATKA", textU, JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREKRATKA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 				}
 			}
 			else {
 				if (!Igra.LST.contains(textL)) {
-					UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
-					UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
-				   	UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 17));
-				   	UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 15));
 				   	
 					if (igra.jezik == Jezik.ANG) {
-						JOptionPane.showMessageDialog(platno2, "WORD YOU ENTERED IS NOT IN DICTIONARY",textU, JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS NOT IN DICTIONARY",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 					}
 					else {
-						JOptionPane.showMessageDialog(platno2, "VNEŠENE BESEDE NI V SLOVARJU",textU, JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "VNEŠENE BESEDE NI V SLOVARJU",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 					}
 				}
     			else {
@@ -246,6 +273,8 @@ public void actionPerformed(ActionEvent e) {
         			repaint();
         			if (igra.stanje_celota() != StanjeEnum.V_TEKU)
 						try {
+						     gumbVnos.setVisible(false);
+						     vnos.setVisible(false);
 							izpisiSporocilo(igra.jezik, igra.stanje_celota());
 						} catch (MalformedURLException e1) {
 							e1.printStackTrace();
@@ -257,28 +286,39 @@ public void actionPerformed(ActionEvent e) {
 		}
 	else if (e.getSource() == gumbNovaIgra) {
 		igra = Igra.novaIgra(igra.jezik);
+	    gumbVnos.setVisible(true);
+	    vnos.setVisible(true);
 		repaint();
 	}
 	else if (e.getSource() == gumbSpremeniJezik) {
     	if (igra.jezik == Jezik.ANG) {
     		igra = Igra.novaIgra(Jezik.SLO);
     		gumbNovaIgra.setText("NOVA IGRA");
+    		izhod.setText("IZHOD");
     		gumbSpremeniJezik.setText("SPREMENI JEZIK");
     		gumbSpremeniJezik.setIcon(pomanjsanaIkona("slo_zastava.png"));
     		gumbSpremeniJezik.setPreferredSize(new Dimension(310, 40));
     		gumbVnos.setText("VNESI");
+    	    gumbVnos.setVisible(true);
+    	    vnos.setVisible(true);
     		repaint();
     	} 
     	else {
     		igra = Igra.novaIgra(Jezik.ANG);
     		gumbNovaIgra.setText("NEW GAME");
+    		izhod.setText("EXIT");
     		gumbSpremeniJezik.setText("CHANGE LANGUAGE");
     		gumbSpremeniJezik.setIcon(pomanjsanaIkona("ang_zastava.png"));
     		gumbSpremeniJezik.setPreferredSize(new Dimension(330, 40));
     		gumbVnos.setText("ENTER");
+    	    gumbVnos.setVisible(true);
+    	    vnos.setVisible(true);
     		repaint();
     	}
     }
+	else if (e.getSource() == izhod) {
+		System.exit(0);
+	}
 	 
 }
 	

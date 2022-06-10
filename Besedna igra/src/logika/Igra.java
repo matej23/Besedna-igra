@@ -306,15 +306,6 @@ public class Igra {
 //			posodobiCrke(barveCrke.barve1, 1);
 		}
 		}
-//		else if (stanje.plosca1 == StanjeEnum.ZMAGA) {
-//			for (String crka : barveCrke.barve1.keySet()) {
-//				barveCrke.barve1.put(crka, Polje.ZMAGA);
-//			}
-//		}
-//		else {
-//			for (String crka : barveCrke.barve1.keySet()) {
-//				barveCrke.barve1.put(crka, Polje.PORAZ);
-//			}
 //		}
 		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
 			int i2 = 0;
