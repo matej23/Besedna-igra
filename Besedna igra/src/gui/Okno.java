@@ -41,10 +41,10 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
    protected static JButton gumbNovaIgra;
    protected static JButton gumbSpremeniJezik;
    protected static JButton gumbVnos;
+   protected static JButton navodila;
    protected static JButton izhod;
    protected static JTextField vnos;
    protected JEditorPane jep;
-  
 
    public Okno() throws IOException {
       super();
@@ -87,6 +87,21 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       gumbNovaIgra.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
       gumbNovaIgra.setForeground(Color.BLACK);
       gumbNovaIgra.addActionListener(this);
+      
+      navodila = new JButton("POMOČ");
+      
+      navodila.setPreferredSize(new Dimension(160, 40));
+      navodila.setBackground(new Color(175, 170, 170));
+      navodila.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+      
+      ImageIcon pomocIcon = new ImageIcon("pomoc.png");
+      Image pomocImage = pomocIcon.getImage(); 
+      Image newImage = pomocImage.getScaledInstance(25, 25,  java.awt.Image.SCALE_SMOOTH);   
+      pomocIcon = new ImageIcon(newImage);
+      
+      navodila.setIcon(pomocIcon);
+      navodila.setForeground(Color.BLACK);
+      navodila.addActionListener(this);
 
       gumbSpremeniJezik = new JButton("SPREMENI JEZIK", pomanjsanaIkona("slo_zastava.png"));
       gumbSpremeniJezik.setPreferredSize(new Dimension(310, 40));
@@ -98,6 +113,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
   
       up.add(gumbNovaIgra, BorderLayout.LINE_START);
       up.add(gumbSpremeniJezik, BorderLayout.CENTER);
+      up.add(navodila, BorderLayout.LINE_END);
       up.add(izhod, BorderLayout.LINE_END);
  
       jep = new JEditorPane();
@@ -315,6 +331,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 		    gumbVnos.setVisible(true);
 		    vnos.setVisible(true);
 			repaint();
+
 		}
 		else if (e.getSource() == gumbSpremeniJezik) {
 	    	if (igra.jezik == Jezik.ANG) {
@@ -322,9 +339,10 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 	    		gumbNovaIgra.setText("NOVA IGRA");
 	    		izhod.setText("IZHOD");
 	    		gumbSpremeniJezik.setText("SPREMENI JEZIK");
+	    		navodila.setText("POMOČ");
 	    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("slo_zastava.png"));
 	    		gumbSpremeniJezik.setPreferredSize(new Dimension(310, 40));
-	    		gumbVnos.setText("VNESI");
+	    		gumbVnos.setText("VNESI"); 
 	    	    gumbVnos.setVisible(true);
 	    	    vnos.setVisible(true);
 	    		repaint();
@@ -334,6 +352,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 	    		gumbNovaIgra.setText("NEW GAME");
 	    		izhod.setText("EXIT");
 	    		gumbSpremeniJezik.setText("CHANGE LANGUAGE");
+	    		navodila.setText("HELP");
 	    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("ang_zastava.png"));
 	    		gumbSpremeniJezik.setPreferredSize(new Dimension(330, 40));
 	    		gumbVnos.setText("ENTER");
@@ -344,6 +363,60 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 	    }
 		else if (e.getSource() == izhod) {
 			System.exit(0);
+		}
+		else if (e.getSource() == navodila) {
+			UIManager.put("OptionPane.background",new ColorUIResource(255, 255, 180));
+			UIManager.put("Panel.background",new ColorUIResource(255, 255, 180));
+	   		UIManager.put("OptionPane.messageFont", new Font("TimesRoman", Font.CENTER_BASELINE, 20));
+	   		UIManager.put("OptionPane.buttonFont", new Font("TimesRoman", Font.CENTER_BASELINE, 20));
+	   		UIManager.put("OptionPane.minimumSize",new Dimension(300,200));
+			UIManager.put("Button.background", Color.WHITE);
+			
+			ImageIcon pomocIcon = new ImageIcon("pomoc.png");
+			Image pomocImage = pomocIcon.getImage(); 
+		    Image newImage = pomocImage.getScaledInstance(35, 35,  java.awt.Image.SCALE_SMOOTH);   
+		    pomocIcon = new ImageIcon(newImage);
+		    
+		    String textAng = "Before you, stands iteration of popular game Wordle.\n"
+		    		+ "\n"
+		    		+ "Purpose of the game is to correctly guess randomly choosen passwords of two boards, based on feedback given by computer every round.\n"
+		    		+ "Passwords are choosen by computer from dictionary of words with five letters.\n"
+		    		+ "Each password belongs to one board.\n"
+		    		+ "Player plays their turn if they type their five letter word from the dictionary into input box and sumbit it via Enter click or button press.\n"
+		    		+ "Try or players word will be written on both boards and letters will get colored based on the password of the given board.\n"
+		    		+ "If letters gets colored green, that means that the same letter is in the same place for the password of the given board.\n"
+		    		+ "If letters gets colored yellow, that means that the same letter is in the password of the given board but not on this place. \n"
+		    		+ "If letters gets colored dark grey, that means that the letter is not in the password of the given board.\n"
+		    		+ "If any letter in the try repeats itself, then computer will look up how many times letter repeats itself in password and color most acurate letter possitions.\n"
+		    		+ "We win by guessing both passwords in given number of tries and lose if we run out of tries before guessing both passwords.\n"
+		    		+ "\n"
+		    		+ "FOOTNOTE:\n" + "Purpose of the alphabet by the side is to help with organisation of used and unused letters and their values of the given board/side.\n"
+		    		+ "\n"
+		    		+ "Have fun while playing :)";
+		    
+		    String textSlo = "Pred vami je iteracija igre Wordle oziroma Besedle.\n"
+		    		+ "\n"
+		    		+ "Namen igre je na podlagi namigov in povratnih informacij, ki jih vračata plošči uganiti gesli, ki si ju je zamislil računalnik.\n"
+		    		+ "Gesli sta naključno izbrani iz slovarja besed, s petimi črkami.\n"
+		    		+ "Vsako izmed gesel pripada eni izmed plošč igre.\n"
+		    		+ "Igralec odigra potezo, ko poskus oziroma besedo s petimi črkami iz slovarja vtipka v polje za vnos in vnos potrdi s klikom na gumb ali tipko Enter.\n"
+		    		+ "Poskus oziroma beseda se bo zapisala v obe plošči hkrati, črke pa se bodo na podlagi gesla za tisto ploščo primerno obarvale.\n"
+		    		+ "Če se črka obarva zeleno, to pomeni da je prav ta črka tudi v geslu za tisto ploščo na tistem mestu.\n"
+		    		+ "Če se črka obarva rumeno, to pomeni da črka je vsebovana v geslu, vendar ne na tistem mestu.\n"
+		    		+ "Če se črka obarva temno sivo, to pomeni da te črke v geslu ni.\n"
+		    		+ "Če se v poskusu katera izmed črk pojavi večkrat, računalnik preveri koliko ponovitev te črke je v geslu in obarva le najustreznejše.\n"
+		    		+ "Igro zmagamo, če v zastavljenem številu poskusov ugotovimo obe gesli/besedi in izgubimo če nam poskusov zmanjka.\n"
+		    		+ "\n"
+		    		+ "OPOMBA:\n" + "Abeceda ob strani je namenjena lažjemu pregledu uporabljenih in neuporabljenih črk in njihovih vrednosti na levi oziroma desni plošči/polovici.\n"
+		    		+ "\n"
+		    		+ "Uživajte ob igranju :)";
+		    		
+			if (igra.jezik == Jezik.ANG) {
+				JOptionPane.showMessageDialog(null, textAng, "INSTRUCTIONS", JOptionPane.ERROR_MESSAGE, pomocIcon);
+			}
+			else {
+				JOptionPane.showMessageDialog(null, textSlo, "NAVODILA", JOptionPane.INFORMATION_MESSAGE, pomocIcon);
+			}
 		}
 		 
 	}
