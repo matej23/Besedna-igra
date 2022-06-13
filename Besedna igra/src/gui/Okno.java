@@ -26,7 +26,6 @@ import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.TextUI;
 
 import logika.Igra;
 import logika.Jezik;
@@ -103,6 +102,8 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
  
       jep = new JEditorPane();
       jep.setContentType("text/html");
+      jep.setFont((new Font("TimesRoman", Font.CENTER_BASELINE, 30)));
+      jep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
       jep.setEditable(false);
       jep.setOpaque(false);
 
@@ -170,8 +171,8 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
    		if (stanje == StanjeEnum.ZMAGA) {
  			UIManager.put("OptionPane.background",new ColorUIResource(204, 255, 204));
    			UIManager.put("Panel.background",new ColorUIResource(204, 255, 204));
-   			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 35));
-   			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 20));
+   			UIManager.put("OptionPane.messageFont", new Font("TimesRoman", Font.CENTER_BASELINE, 30));
+   			UIManager.put("OptionPane.buttonFont", new Font("TimesRoman", Font.CENTER_BASELINE, 25));
    			UIManager.put("OptionPane.minimumSize",new Dimension(400,200)); 
    			UIManager.put("Button.background", Color.WHITE);
    			
@@ -181,17 +182,28 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
             imageIcon = new ImageIcon(newimg);
             
    			if (jezik == Jezik.ANG) {
-   	   	    	JButton jbtNewGame = new JButton("NEW GAME");
-   	   	    	jbtNewGame.addActionListener(this);
-   	   	    	JButton jbtExit = new JButton("EXIT");
-   	   	    	jbtExit.addActionListener(this);
-   				Object[] options = {"OK", jbtNewGame, jbtExit};
-   				int result = JOptionPane.showOptionDialog(null, "CONGRATULATIONS!", "YOU WON !", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, null);
+   				Object[] options = {"OK", "NEW GAME", "EXIT"};
+   				int result = JOptionPane.showOptionDialog(null, "CONGRATULATIONS!", "YOU WON !", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, options[0]);
+   				if (result == 1) {
+   					gumbNovaIgra.doClick();
+   				}
+   				else if (result == 2) {
+   					System.exit(0);
+   				}
    			}
+   			
    			else {
-   				JOptionPane.showMessageDialog(null, "BRAVO!", "ZMAGALI STE !", JOptionPane.WARNING_MESSAGE, imageIcon);
+   				Object[] options = {"OK", "NOVA IGRA", "IZHOD"};
+   				int result = JOptionPane.showOptionDialog(null, "BRAVO !", "ZMAGALI STE !", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, options[0]);
+   				if (result == 1) {
+   					gumbNovaIgra.doClick();
+   				}
+   				else if (result == 2) {
+   					System.exit(0);
+   				}
    			}
    		}
+   		
    		else {
 			UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
 			UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
@@ -207,139 +219,150 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
    				String url = "https://www.merriam-webster.com/dictionary/";
    				String tekst = "THE CORRECT SOLUTION IS <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> AND <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(null, jep, "YOU LOST :(", JOptionPane.WARNING_MESSAGE, imageIcon);
+   			   	
+   			   	Object[] options = {"OK", "NEW GAME", "EXIT"};
+   				int result = JOptionPane.showOptionDialog(null, jep, "YOU LOST...", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, options[0]);
+   				if (result == 1) {
+   					gumbNovaIgra.doClick();
+   				}
+   				else if (result == 2) {
+   					System.exit(0);
+   				}
    			}
    			else {
    				String url = "https://fran.si/iskanje?View=1&Query=";
    				String tekst = " ISKANI BESEDI STA <a href='"+url+igra.beseda1+"'>"+igra.beseda1.toUpperCase()+"</a> IN <a href='"+url+igra.beseda2+"'>"+igra.beseda2.toUpperCase()+"</a>.";
    			   	dodajUrl(igra.beseda1, igra.beseda2, jep, url, tekst);
-   				JOptionPane.showMessageDialog(null, jep, "IZGUBILI STE :(", JOptionPane.WARNING_MESSAGE, imageIcon);
+   			   	
+   			   	Object[] options = {"OK", "NOVA IGRA", "IZHOD"};
+   				int result = JOptionPane.showOptionDialog(null, jep, "IZGUBILI STE...", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, imageIcon, options, options[0]);
+   				if (result == 1) {
+   					gumbNovaIgra.doClick();
+   				}
+   				else if (result == 2) {
+   					System.exit(0);
+   				}
    			}
    				
    		}
    	}
    	
-@Override
-public void actionPerformed(ActionEvent e) {
-	if ((e.getSource() == vnos) || (e.getSource() == gumbVnos)) {
-		
- 		ImageIcon napakaIcon = new ImageIcon("napaka.png");
-        Image image = napakaIcon.getImage(); 
-        Image newimg = image.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);   
-        napakaIcon = new ImageIcon(newimg);
-        
-		UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
-		UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
-   		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
-   		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 20));
-   		UIManager.put("OptionPane.minimumSize",new Dimension(400,200));
-		UIManager.put("Button.background", Color.WHITE);
-		
-		String textU = vnos.getText();
-		String textL = textU.toLowerCase();
+   	@Override
+	public void actionPerformed(ActionEvent e) {
+		if ((e.getSource() == vnos) || (e.getSource() == gumbVnos)) {
 			
-			if (textL.length() > 5) {
-		   		
-				vnos.setText("");
-				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO LONG", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREDOLGA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
-				}
-			}
-			else if (textL.length() < 5) {
-		   		
-				vnos.setText("");
-				if (igra.jezik == Jezik.ANG) {
-					JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO SHORT", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREKRATKA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
-				}
-			}
-			else {
-				if (!Igra.LST.contains(textL)) {
-				   	
+	 		ImageIcon napakaIcon = new ImageIcon("napaka.png");
+	        Image image = napakaIcon.getImage(); 
+	        Image newimg = image.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);   
+	        napakaIcon = new ImageIcon(newimg);
+	        
+			UIManager.put("OptionPane.background",new ColorUIResource(255, 204, 204));
+			UIManager.put("Panel.background",new ColorUIResource(255, 204, 204));
+	   		UIManager.put("OptionPane.messageFont", new Font("TimesRoman", Font.CENTER_BASELINE, 30));
+	   		UIManager.put("OptionPane.buttonFont", new Font("TimesRoman", Font.CENTER_BASELINE, 25));
+	   		UIManager.put("OptionPane.minimumSize",new Dimension(300,200));
+			UIManager.put("Button.background", Color.WHITE);
+			
+			String textU = vnos.getText();
+			String textL = textU.toLowerCase();
+				
+				if (textL.length() > 5) {
+					vnos.setText("");
 					if (igra.jezik == Jezik.ANG) {
-						JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS NOT IN DICTIONARY",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
+						JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO LONG", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "VNEŠENE BESEDE NI V SLOVARJU",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
+						JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREDOLGA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 					}
 				}
-    			else {
-        			igra.posodobi_in_odigraj(textL);
-        			repaint();
-        			if (igra.stanje_celota() != StanjeEnum.V_TEKU)
-						try {
-						     gumbVnos.setVisible(false);
-						     vnos.setVisible(false);
-							izpisiSporocilo(igra.jezik, igra.stanje_celota());
-						} catch (MalformedURLException e1) {
-							e1.printStackTrace();
+				else if (textL.length() < 5) {
+					vnos.setText("");
+					if (igra.jezik == Jezik.ANG) {
+						JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS TOO SHORT", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "BESEDA, KI STE JO VNESLI, JE PREKRATKA", textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
+					}
+				}
+				else {
+					if (!Igra.LST.contains(textL)) {
+					   	
+						if (igra.jezik == Jezik.ANG) {
+							JOptionPane.showMessageDialog(null, "WORD YOU ENTERED IS NOT IN DICTIONARY",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
 						}
-        			
-    			}
-				vnos.setText("");
+						else {
+							JOptionPane.showMessageDialog(null, "VNEŠENE BESEDE NI V SLOVARJU",textU, JOptionPane.ERROR_MESSAGE, napakaIcon);
+						}
+					}
+	    			else {
+	        			igra.posodobi_in_odigraj(textL);
+	        			repaint();
+	        			if (igra.stanje_celota() != StanjeEnum.V_TEKU)
+							try {
+							     gumbVnos.setVisible(false);
+							     vnos.setVisible(false);
+								izpisiSporocilo(igra.jezik, igra.stanje_celota());
+							} catch (MalformedURLException e1) {
+								e1.printStackTrace();
+							}
+	        			
+	    			}
+					vnos.setText("");
+				}
 			}
+		else if (e.getSource() == gumbNovaIgra) {
+			igra = Igra.novaIgra(igra.jezik);
+		    gumbVnos.setVisible(true);
+		    vnos.setVisible(true);
+			repaint();
 		}
-	else if (e.getSource() == gumbNovaIgra) {
-		igra = Igra.novaIgra(igra.jezik);
-	    gumbVnos.setVisible(true);
-	    vnos.setVisible(true);
-		repaint();
+		else if (e.getSource() == gumbSpremeniJezik) {
+	    	if (igra.jezik == Jezik.ANG) {
+	    		igra = Igra.novaIgra(Jezik.SLO);
+	    		gumbNovaIgra.setText("NOVA IGRA");
+	    		izhod.setText("IZHOD");
+	    		gumbSpremeniJezik.setText("SPREMENI JEZIK");
+	    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("slo_zastava.png"));
+	    		gumbSpremeniJezik.setPreferredSize(new Dimension(310, 40));
+	    		gumbVnos.setText("VNESI");
+	    	    gumbVnos.setVisible(true);
+	    	    vnos.setVisible(true);
+	    		repaint();
+	    	} 
+	    	else {
+	    		igra = Igra.novaIgra(Jezik.ANG);
+	    		gumbNovaIgra.setText("NEW GAME");
+	    		izhod.setText("EXIT");
+	    		gumbSpremeniJezik.setText("CHANGE LANGUAGE");
+	    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("ang_zastava.png"));
+	    		gumbSpremeniJezik.setPreferredSize(new Dimension(330, 40));
+	    		gumbVnos.setText("ENTER");
+	    	    gumbVnos.setVisible(true);
+	    	    vnos.setVisible(true);
+	    		repaint();
+	    	}
+	    }
+		else if (e.getSource() == izhod) {
+			System.exit(0);
+		}
+		 
 	}
-	else if (e.getSource() == gumbSpremeniJezik) {
-    	if (igra.jezik == Jezik.ANG) {
-    		igra = Igra.novaIgra(Jezik.SLO);
-    		gumbNovaIgra.setText("NOVA IGRA");
-    		izhod.setText("IZHOD");
-    		gumbSpremeniJezik.setText("SPREMENI JEZIK");
-    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("slo_zastava.png"));
-    		gumbSpremeniJezik.setPreferredSize(new Dimension(310, 40));
-    		gumbVnos.setText("VNESI");
-    	    gumbVnos.setVisible(true);
-    	    vnos.setVisible(true);
-    		repaint();
-    	} 
-    	else {
-    		igra = Igra.novaIgra(Jezik.ANG);
-    		gumbNovaIgra.setText("NEW GAME");
-    		izhod.setText("EXIT");
-    		gumbSpremeniJezik.setText("CHANGE LANGUAGE");
-    		gumbSpremeniJezik.setIcon(pomanjsanaIkona("ang_zastava.png"));
-    		gumbSpremeniJezik.setPreferredSize(new Dimension(330, 40));
-    		gumbVnos.setText("ENTER");
-    	    gumbVnos.setVisible(true);
-    	    vnos.setVisible(true);
-    		repaint();
-    	}
-    }
-	else if (e.getSource() == izhod) {
-		System.exit(0);
+		
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
 	}
-	 
-}
+	@Override
+	public void keyTyped(KeyEvent e) {
+	    char keyChar = e.getKeyChar();
+	    if (Character.isLowerCase(keyChar)) {
+	      e.setKeyChar(Character.toUpperCase(keyChar));
+	    }
+	  }
 	
-
-@Override
-public void keyReleased(KeyEvent e) {
-	
-}
-@Override
-public void keyTyped(KeyEvent e) {
-    char keyChar = e.getKeyChar();
-    if (Character.isLowerCase(keyChar)) {
-      e.setKeyChar(Character.toUpperCase(keyChar));
-    }
-  }
-
-@Override
-public void keyPressed(KeyEvent e) {
-}
-
-
-    
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+	}
 
 }

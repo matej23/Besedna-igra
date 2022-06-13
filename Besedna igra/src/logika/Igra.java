@@ -191,8 +191,68 @@ public class Igra {
 		}
 	}
 	
-	// pomozna funkcija za steviloMoznih 
+	public int steviloPonovitev(String crka, String beseda) {
+		int counter = 0;
+		String pomozna = "";
+		for (int i = 0; i < beseda.length(); i++) {
+			pomozna += beseda.charAt(i);
+			if (pomozna == crka) {
+				counter++;
+				pomozna = "";
+			}
+			else {
+				pomozna = "";
+			}
+		}
+		return counter;
+	}
+	
+//	public int steviloMoznih(String poskus, int steviloPlosca) {
+//		String[][] plosca_vrednosti;
+//		Polje[][] plosca_barve;
+//		Map<Integer, Polje> slovar;
+//		String[] crkePoskus;
+//		
+//		crkePoskus = poskus.split("");
+//		Map<Integer, Integer> ponovitvePoskus = new HashMap<Integer, Integer>();
+//		
+//		if (steviloPlosca == 1) {
+//			plosca_vrednosti = plosca1_vrednosti;
+//			plosca_barve = plosca1_barve;
+//			slovar = barvaZaVrednost(beseda1, poskus);
+//		}
+//		else {
+//			plosca_vrednosti = plosca2_vrednosti;
+//			plosca_barve = plosca2_barve;
+//			slovar = barvaZaVrednost(beseda2, poskus);
+//		}
+//		
+//		for (int j = 0; j < crkePoskus.length; j++) {
+//			ponovitvePoskus.put(j, steviloPonovitev(crkePoskus[j], poskus));
+//		}
+//		for (String potencialna : LST) {
+//			
+////			String zeleni = "";
+////			String rumeni = "";
+////			for (int i = 0; i < crkePoskus.length; ++i) {
+////				if (slovar.get(i) == Polje.PRAVILNO) {
+////					zeleni += crkePoskus[i];
+////				}
+////				else if (slovar.get(i) == Polje.DELNOPRAVILNO){
+////					zeleni += ".";
+////					rumeni += crkePoskus[i];
+////				}
+////				else (slovar.get(i) == Polje.NAPACNO){
+////					zeleni += ".";
+////				}
+////			}
+//		}
+//		return 0;
+//	}
+	
+//	 //pomozna funkcija za steviloMoznih 
 //	public static boolean seUjema(String element, String poskus, String geslo) {
+//		//dobimo slovar indek -> PoljeEnum
 //		Map<Integer, Polje> slovar = barvaZaVrednost(geslo, poskus);
 //		String[] lst_poskus = poskus.split("");
 //		String zeleni = "";
@@ -201,19 +261,20 @@ public class Igra {
 //		LinkedList<String> zeleniSez = new LinkedList<String>();
 //		LinkedList<String> siviSez = new LinkedList<String>();
 //		LinkedList<String> rumeniSez = new LinkedList<String>();
-//		for (int i = 0; i < poskus.length(); ++i) {
+//		for (int i = 0; i < lst_poskus.length; ++i) {
 //			if (slovar.get(i) == Polje.PRAVILNO) {
 //				zeleni += lst_poskus[i];
-//				zeleniSez.add(lst_poskus[i]);
+//				//rumeni ??
+//				zeleniSez.addLast(lst_poskus[i]);
 //			}
 //			else if (slovar.get(i) == Polje.DELNOPRAVILNO) {
 //				zeleni += ".";
 //				rumeni += "(?=.*"+lst_poskus[i]+".*)";
-//				rumeniSez.add(lst_poskus[i]);
+//				rumeniSez.addLast(lst_poskus[i]);
 //			}
 //			else {
 //				zeleni += ".";
-//				siviSez.add(lst_poskus[i]);
+//				siviSez.addLast(lst_poskus[i]);
 //			}
 //		}
 //		siviSez = precisciSivi(siviSez, zeleniSez);
@@ -246,12 +307,13 @@ public class Igra {
 //		return preciscen;
 //	}
 //	
+//	//iz seznama crk naredi pripadajoco besedo
 //	public static String pretvoriVNiz(LinkedList<String> seznam) {
 //		return String.join("", seznam);
 //	}
 //	
 //	// izracuna stevilo moznih besed glede na obarvanost polj na plosci
-//	
+//	//ta je okej
 //	public int steviloMoznih(String poskus, int steviloPlosca) {
 //		if (steviloPlosca == 1) {
 //			for (String element : LST) {
@@ -270,83 +332,155 @@ public class Igra {
 //			return mozneBesede2.size();
 //		}
 //	}
-	public void posodobi(String poteza) {
-		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
-			int i1 = 0;
-			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
-				i1++;
-				if (i1 == 6) break;
+	
+	public void posodobi(String poteza, int plosca) {
+		StanjeEnum stanjePlosca;
+		Polje [][] ploscaBarve;
+		HashMap<String, Polje> barve;
+		String [][] ploscaVrednosti;
+		
+		if (plosca == 1) {
+			stanjePlosca = stanje.plosca1;
+			ploscaBarve = plosca1_barve;
+			barve = barveCrke.barve1;
+			ploscaVrednosti = plosca1_vrednosti;
+		}
+		else {
+			stanjePlosca = stanje.plosca2;
+			ploscaBarve = plosca2_barve;
+			barve = barveCrke.barve2;
+			ploscaVrednosti = plosca2_vrednosti;
+		}
+		
+		if (stanjePlosca == StanjeEnum.V_TEKU) {
+			int i = 0;
+			while (ploscaBarve[i][0] != Polje.PRAZNO) {
+				i++;
+				if (i == 6) break;
 			}
-			if (i1 > 0) {
-				Polje[] test1 = new Polje[5];
-				for (int k1 = 0; k1 < test1.length; k1++) {
-					test1[k1] = Polje.PRAVILNO;
-					if (plosca1_barve[i1-1][k1] == Polje.PRAVILNO) {
-						barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.PRAVILNO);
+			
+			if (i > 0) {
+				Polje[] test = new Polje[5];
+				
+				for (int k = 0; k < test.length; k++) {
+					test[k] = Polje.PRAVILNO;
+					
+					if (ploscaBarve[i-1][k] == Polje.PRAVILNO) {
+						barve.put(ploscaVrednosti[i-1][k], Polje.PRAVILNO);
 					}
-					else if (plosca1_barve[i1-1][k1] == Polje.NAPACNO) {
-						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
-							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.NAPACNO);
+					else if (ploscaBarve[i-1][k] == Polje.NAPACNO) {
+						if (barve.get(ploscaVrednosti[i-1][1]) == Polje.PRAZNO) {
+							barve.put(ploscaVrednosti[i-1][k], Polje.NAPACNO);
 						}
 					}
-					else if (plosca1_barve[i1-1][k1] == Polje.DELNOPRAVILNO) {
-						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
-							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.DELNOPRAVILNO);
+					else if (ploscaBarve[i-1][k] == Polje.DELNOPRAVILNO) {
+						if (barve.get(ploscaVrednosti[i-1][k]) == Polje.PRAZNO) {
+							barve.put(ploscaVrednosti[i-1][k], Polje.DELNOPRAVILNO);
 						}
 					}
-				if (Arrays.equals(test1, plosca1_barve[i1 - 1])) {
-					stanje.plosca1 = StanjeEnum.ZMAGA;
+					
+					if (Arrays.equals(test, ploscaBarve[i - 1])) {
+						if (plosca == 1) {
+							stanje.plosca1 = StanjeEnum.ZMAGA;
+						}
+						else {
+							stanje.plosca2 = StanjeEnum.ZMAGA;
+						}
 					}
-				else if (i1 == 6) {
-					stanje.plosca1 = StanjeEnum.PORAZ;
+					else if (i == 6) {
+						if (plosca == 1) {
+							stanje.plosca1 = StanjeEnum.PORAZ;
+						}
+						else {
+							stanje.plosca2 = StanjeEnum.PORAZ;
+						}
 					}	
+				}
 			}
 //			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
 //			steviloBesed1.addLast(steviloMoznih(poteza, 1));
 //			posodobiCrke(barveCrke.barve1, 1);
 		}
-		}
+	}
+	
+	
+//	public void posodobi(String poteza) {
+//		if (stanje.plosca1 == StanjeEnum.V_TEKU) {
+//			int i1 = 0;
+//			while (plosca1_barve[i1][0] != Polje.PRAZNO) {
+//				i1++;
+//				if (i1 == 6) break;
+//			}
+//			if (i1 > 0) {
+//				Polje[] test1 = new Polje[5];
+//				for (int k1 = 0; k1 < test1.length; k1++) {
+//					test1[k1] = Polje.PRAVILNO;
+//					if (plosca1_barve[i1-1][k1] == Polje.PRAVILNO) {
+//						barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.PRAVILNO);
+//					}
+//					else if (plosca1_barve[i1-1][k1] == Polje.NAPACNO) {
+//						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
+//							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.NAPACNO);
+//						}
+//					}
+//					else if (plosca1_barve[i1-1][k1] == Polje.DELNOPRAVILNO) {
+//						if (barveCrke.barve1.get(plosca1_vrednosti[i1-1][k1]) == Polje.PRAZNO) {
+//							barveCrke.barve1.put(plosca1_vrednosti[i1-1][k1], Polje.DELNOPRAVILNO);
+//						}
+//					}
+//				if (Arrays.equals(test1, plosca1_barve[i1 - 1])) {
+//					stanje.plosca1 = StanjeEnum.ZMAGA;
+//					}
+//				else if (i1 == 6) {
+//					stanje.plosca1 = StanjeEnum.PORAZ;
+//					}	
+//			}
+////			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+////			steviloBesed1.addLast(steviloMoznih(poteza, 1));
+////			posodobiCrke(barveCrke.barve1, 1);
 //		}
-		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
-			int i2 = 0;
-			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
-				i2++;
-				if (i2 == 6) break;
-			}
-			if (i2 > 0) {
-				Polje[] test2 = new Polje[5];
-				for (int k2 = 0; k2 < test2.length; k2++) {
-					test2[k2] = Polje.PRAVILNO;
-					if (plosca2_barve[i2-1][k2] == Polje.PRAVILNO) {
-						barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.PRAVILNO);
-					}
-					else if (plosca2_barve[i2-1][k2] == Polje.NAPACNO) {
-						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
-							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.NAPACNO);
-						}
-					}
-					else if (plosca2_barve[i2-1][k2] == Polje.DELNOPRAVILNO) {
-						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
-							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.DELNOPRAVILNO);
-						}
-					}
-				if (Arrays.equals(test2, plosca2_barve[i2 - 1])) {
-					stanje.plosca2 = StanjeEnum.ZMAGA;
-					}
-				else if (i2 == 6) {
-					stanje.plosca2 = StanjeEnum.PORAZ;
-					}	
-			}
-//			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
-//			steviloBesed1.addLast(steviloMoznih(poteza, 1));
-//			posodobiCrke(barveCrke.barve1, 1);
-		}
-		}
-		}
+//		}
+//		if (stanje.plosca2 == StanjeEnum.V_TEKU) {
+//			int i2 = 0;
+//			while (plosca2_barve[i2][0] != Polje.PRAZNO) {
+//				i2++;
+//				if (i2 == 6) break;
+//			}
+//			if (i2 > 0) {
+//				Polje[] test2 = new Polje[5];
+//				for (int k2 = 0; k2 < test2.length; k2++) {
+//					test2[k2] = Polje.PRAVILNO;
+//					if (plosca2_barve[i2-1][k2] == Polje.PRAVILNO) {
+//						barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.PRAVILNO);
+//					}
+//					else if (plosca2_barve[i2-1][k2] == Polje.NAPACNO) {
+//						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+//							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.NAPACNO);
+//						}
+//					}
+//					else if (plosca2_barve[i2-1][k2] == Polje.DELNOPRAVILNO) {
+//						if (barveCrke.barve2.get(plosca2_vrednosti[i2-1][k2]) == Polje.PRAZNO) {
+//							barveCrke.barve2.put(plosca2_vrednosti[i2-1][k2], Polje.DELNOPRAVILNO);
+//						}
+//					}
+//				if (Arrays.equals(test2, plosca2_barve[i2 - 1])) {
+//					stanje.plosca2 = StanjeEnum.ZMAGA;
+//					}
+//				else if (i2 == 6) {
+//					stanje.plosca2 = StanjeEnum.PORAZ;
+//					}	
+//			}
+////			stanje.stevilo_moznosti1 = steviloMoznih(poteza, 1);
+////			steviloBesed1.addLast(steviloMoznih(poteza, 1));
+////			posodobiCrke(barveCrke.barve1, 1);
+//		}
+//		}
+//	}
 	
 	public void posodobi_in_odigraj(String poteza) {
 		odigraj(poteza);
-		posodobi(poteza);
+		posodobi(poteza, 1);
+		posodobi(poteza, 2);
 	}
 	
 	public StanjeEnum stanje_celota() {
