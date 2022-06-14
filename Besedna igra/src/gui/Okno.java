@@ -387,7 +387,7 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
 		    		+ "If a letter turns green, then the letter is in the correct place for the password of the given board.\n"
 		    		+ "If a letter turns yellow, then the letter is in the password of the given board but not in the correct place. \n"
 		    		+ "If a letter turns dark grey, then it is not in the password of the given board.\n"
-		    		+ "If any letter in the try repeats itself, then the computer will look up how many times the letter repeats itself in the password and color the most accurate letter positions.\n"
+		    		+ "If any letter in the try repeats itself, then the computer will look up how many times the letter repeats itself in the password.\nThen only the most accurate positions will get colored.\n"
 		    		+ "A player wins by guessing both words in less then 6 tries and loses if he runs out of tries before guessing both passwords.\n"
 		    		+ "\n"
 		    		+ "FOOTNOTE:\n" + "Purpose of the alphabet by the side is to help with organisation of the used and unused letters and their values of the given board.\n"
