@@ -26,24 +26,13 @@ class Crke extends JPanel{
 		super();
 		setPreferredSize(new Dimension(400, 400));
 
-//		if (igra.jezik == Jezik.ANG) {
-//			crkeVrstica = 4;
-//		}
-//		else {
-//			crkeVrstica = 5;
-//		}
 	}
 	
-//	public void paint(Graphics g) {
-//		super.paint(g);
-//	    draw(g);
-//	}
+
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		BarveCrke barveCrke = Okno.igra.barveCrke;
-		String geslo1 = Okno.igra.beseda1;
-		String geslo2 = Okno.igra.beseda2;
 		Jezik jezik = Okno.igra.jezik;
 		String[] crkeIzpis;
 		
@@ -91,10 +80,6 @@ class Crke extends JPanel{
 				   y += 50;
 			   }
 		   }
-		   Rectangle rectangle3 = new Rectangle(x, y, 100,50);
-		   centerString(g,rectangle3,geslo1.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
-		   Rectangle rectangle4 = new Rectangle(x, y + 60, 100, 50);
-		   centerString(g,rectangle4,geslo2.toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 30));
 		   
 		   repaint();
 	}

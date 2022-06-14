@@ -19,54 +19,32 @@ import logika.StanjeEnum;
 class Platno extends JPanel {
 	int st_plosce;
 	private Color defaultColor;
-//	private StanjeEnum stanje;
-//	private Polje[][] barve_polja;
-//	private String[][] plosca_vrednosti;
-//	LinkedList<Integer> steviloBesed;
-	
+
    public Platno(int st_plosce) {
 	  super();
       setPreferredSize(new Dimension(550, 550));
       this.st_plosce = st_plosce;
       this.defaultColor = getBackground();
-
-//      if (st_plosce == 1) {
-//    	 stanje = Okno.igra.stanje.plosca1;
-//    	 barve_polja = Okno.igra.plosca1_barve;
-//    	 plosca_vrednosti = Okno.igra.plosca1_vrednosti;
-//    	 steviloBesed = Okno.igra.steviloBesed1;
-//      }
-//      else {
-//    	 stanje = Okno.igra.stanje.plosca2;
-//    	 barve_polja = Okno.igra.plosca2_barve;
-//    	 plosca_vrednosti = Okno.igra.plosca2_vrednosti;
-//    	 steviloBesed = Okno.igra.steviloBesed2;
-//      }
    }
    
-//   public void paint(Graphics g) {
-//       super.paint(g);
-//       draw(g);
-//   }
+
 
    public void paintComponent(Graphics g){
 	   super.paintComponent(g);
 	   StanjeEnum stanje;
 	   Polje[][] barve_polja;
 	   String[][] plosca_vrednosti;
-//	   LinkedList<Integer> steviloBesed;
 	   
 	   if (st_plosce == 1) {
 		   stanje = Igra.stanje.plosca1;
 		   barve_polja = Okno.igra.plosca1_barve;
 		   plosca_vrednosti = Okno.igra.plosca1_vrednosti;
-//		   steviloBesed = Okno.igra.steviloBesed1;
 	      }
 	  else {
 		  stanje = Igra.stanje.plosca2;
 		  barve_polja = Okno.igra.plosca2_barve;
 		  plosca_vrednosti = Okno.igra.plosca2_vrednosti;
-//		  steviloBesed = Okno.igra.steviloBesed2;
+
 	      }
 	   
 	   if (stanje == StanjeEnum.PORAZ) {
@@ -104,11 +82,7 @@ class Platno extends JPanel {
 			   centerString(g,rectangle,plosca_vrednosti[i][j].toUpperCase(),new Font("SansSerif Bold", Font.PLAIN, 50));
 			   x+= 70;
 		   }
-//		   if (barve_polja[i][0] != Polje.PRAZNO) {
-//			   String moznostiStr = Integer.toString(steviloBesed.get(i));
-//			   g.drawString(moznostiStr, x + 10, y + 50);
-//			   
-//		   }
+
 		   x = 70;
 		   y+= 70;
 	   }
