@@ -25,10 +25,7 @@ class Crke extends JPanel{
 	public Crke(Igra igra) {
 		super();
 		setPreferredSize(new Dimension(400, 400));
-
 	}
-	
-
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -137,6 +134,5 @@ class Crke extends JPanel{
 	    g.setFont(font);
 	    g.drawString(s, r.x + a, r.y + b);
 	}
-	
 	
 }

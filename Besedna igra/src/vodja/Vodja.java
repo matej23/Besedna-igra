@@ -41,12 +41,10 @@ public class Vodja {
 							igra.posodobi_in_odigraj(poskus.trim());
 							System.out.println(igra.beseda1);
 							System.out.println(igra.stanje.plosca1 + "\n");
-							System.out.print(igra.stanje.stevilo_moznosti1 + "\n");
 							plosca_izpis(igra.plosca1_barve);
 							System.out.println("\n");
 							System.out.println(igra.beseda2);
 							System.out.println(igra.stanje.plosca2+ "\n");
-							System.out.print(igra.stanje.stevilo_moznosti2+ "\n");
 							plosca_izpis(igra.plosca2_barve);
 						}
 					}

@@ -26,8 +26,6 @@ class Platno extends JPanel {
       this.st_plosce = st_plosce;
       this.defaultColor = getBackground();
    }
-   
-
 
    public void paintComponent(Graphics g){
 	   super.paintComponent(g);
@@ -61,6 +59,7 @@ class Platno extends JPanel {
 	   Color delno_pravilno = new Color(250,250,50);
 	   int x = 70;
 	   int y = 70;
+	   
 	   for (int i = 0; i < barve_polja.length; i++) {
 		   for (int j = 0; j < barve_polja[0].length; j++) {
 			   if (barve_polja[i][j] == Polje.PRAZNO) {
@@ -89,10 +88,8 @@ class Platno extends JPanel {
 	   repaint();
    }
    
-   public void centerString(Graphics g, Rectangle r, String s, 
-	        Font font) {
-	    FontRenderContext frc = 
-	            new FontRenderContext(null, true, true);
+   public void centerString(Graphics g, Rectangle r, String s, Font font) {
+	   FontRenderContext frc = new FontRenderContext(null, true, true);
 
 	    Rectangle2D r2D = font.getStringBounds(s, frc);
 	    int rWidth = (int) Math.round(r2D.getWidth());

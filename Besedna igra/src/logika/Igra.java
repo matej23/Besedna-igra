@@ -12,7 +12,6 @@ import java.util.Random;
 
 public class Igra {
 	
-	
 	public static final int V = 6;
 	public static final int S = 5;
 	
@@ -30,11 +29,6 @@ public class Igra {
 	
 	public BarveCrke barveCrke;
 	
-	public LinkedList<Integer> steviloBesed1;
-	public LinkedList<Integer> steviloBesed2;
-	
-	public static LinkedList<String> mozneBesede1;
-	public static LinkedList<String> mozneBesede2;
 	
 	public Jezik jezik;
 	
@@ -64,14 +58,8 @@ public class Igra {
 				}
 			}
 		}
-		mozneBesede1 = (LinkedList<String>) LST.clone();
-		mozneBesede2 = (LinkedList<String>) LST.clone();
-		
-		steviloBesed1 = new LinkedList<Integer>();
-		steviloBesed2 = new LinkedList<Integer>();
-		
 
-		stanje = new Stanje(LST.size());
+		stanje = new Stanje();
 		Random rand = new Random();
 		int i = rand.nextInt(LST.size());
 		beseda1 = LST.get(i);

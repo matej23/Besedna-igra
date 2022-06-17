@@ -148,8 +148,6 @@ public class Okno extends JFrame implements ActionListener, KeyListener{
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
    
-	
-   
    	public ImageIcon pomanjsanaIkona(String niz) {
    		ImageIcon imageIcon = new ImageIcon(niz);
         Image image = imageIcon.getImage(); 
